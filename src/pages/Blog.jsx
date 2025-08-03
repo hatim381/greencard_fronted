@@ -19,7 +19,7 @@ const Blog = () => {
 		let isMounted = true;
 
 		axios
-			.get('/api/blog')
+			.get(`${process.env.REACT_APP_API_URL}/blog`)
 			.then((res) => {
 				if (isMounted) {
 					setPosts(res.data);
