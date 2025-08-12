@@ -94,6 +94,12 @@ nav {
   display: none;
 }
 
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
 @media (max-width: 768px) {
   nav {
     flex-wrap: wrap;
@@ -124,6 +130,13 @@ nav {
     width: 100%;
     justify-content: center;
     margin-top: 1rem;
+    display: none;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .nav-actions.open {
+    display: flex;
   }
 }
 
