@@ -84,13 +84,11 @@ const ProductList = ({ onAddToCart, user }) => {
       )}
       {/* Liste des produits actifs */}
       <div
-        className="product-list"
+        className="product-list grid-auto"
         style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))",
-          gap: 32,
+          gap: "2rem",
           margin: "0 auto",
-          maxWidth: 1200,
+          maxWidth: "75rem",
         }}
       >
         {activeProducts.map(p => (
@@ -207,10 +205,8 @@ const ProductList = ({ onAddToCart, user }) => {
       {user && user.role === 'producer' && soldOrExpired.length > 0 && (
         <section style={{ marginTop: 40 }}>
           <h3 style={{ color: "#888", marginBottom: 16 }}>Produits vendus ou périmés</h3>
-          <div className="product-list" style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-            gap: 24,
+          <div className="product-list grid-auto" style={{
+            gap: "1.5rem",
             opacity: 0.7
           }}>
             {soldOrExpired.map(p => (

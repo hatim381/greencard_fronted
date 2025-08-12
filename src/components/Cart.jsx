@@ -116,8 +116,9 @@ const Cart = ({ cart, onRemove, onClear, user }) => {
         </div>
       ) : (
         <div>
-          <table style={{ width: "100%", marginBottom: 24 }}>
-            <thead>
+          <div className="table-wrapper">
+            <table style={{ width: "100%", marginBottom: 24 }}>
+              <thead>
               <tr style={{ background: "#F3F4F6" }}>
                 <th style={{ textAlign: "left", padding: 8 }}>Produit</th>
                 <th style={{ textAlign: "center", padding: 8 }}>Prix</th>
@@ -148,8 +149,9 @@ const Cart = ({ cart, onRemove, onClear, user }) => {
                   </td>
                 </tr>
               ))}
-            </tbody>
-          </table>
+              </tbody>
+            </table>
+          </div>
 
           <div
             style={{
