@@ -1,6 +1,10 @@
 import { Link } from 'react-router-dom';
+import { useState } from 'react';
 
-const Navbar = ({ cartCount, user, onLogout, darkMode, onToggleDarkMode }) => (
+const Navbar = ({ cartCount, user, onLogout, darkMode, onToggleDarkMode }) => {
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  return (
   <nav style={{
     background: darkMode ? "#181F2A" : "#fff",
     padding: "1.3rem 2.5rem",
@@ -31,8 +35,14 @@ const Navbar = ({ cartCount, user, onLogout, darkMode, onToggleDarkMode }) => (
         />
       </Link>
     </div>
-    <div className="nav-links" style={{
-      display: "flex",
+    <button
+      className="mobile-menu-button"
+      onClick={() => setMenuOpen(!menuOpen)}
+      aria-label="Menu"
+    >
+      ☰
+    </button>
+    <div className={`nav-links${menuOpen ? ' open' : ''}`} style={{
       gap: "2.7rem",
       fontSize: "1.15em",
       fontWeight: 700,
@@ -208,6 +218,7 @@ const Navbar = ({ cartCount, user, onLogout, darkMode, onToggleDarkMode }) => (
       </button>
     </div>
   </nav>
-);
+  );
+};
 
 export default Navbar;
