@@ -370,7 +370,6 @@ const Dashboard = ({ user, setUser }) => {
                   {withdrawalMessage && <div style={{ color: '#22C55E', marginTop: 8 }}>{withdrawalMessage}</div>}
                 </div>
               )}
- { useState }
             </div>
             <div style={{
               background: "#fff",
