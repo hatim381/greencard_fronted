@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
+const API_URL = process.env.REACT_APP_API_URL || 'https://greencard-backend.onrender.com/api';
+
 const categories = [
   { label: 'Tous les produits', value: '' },
   { label: 'Fruits & légumes', value: 'Fruits & légumes' },
@@ -77,7 +79,7 @@ const Home = ({ user, onAddToCart }) => {
 
   useEffect(() => {
     // Récupère les produits disponibles (quantité > 0 et non périmés)
-    axios.get('/api/products')
+    axios.get(`${API_URL}/products`)
       .then(res => {
         const today = new Date();
         const filtered = res.data.filter(p => {
@@ -94,7 +96,7 @@ const Home = ({ user, onAddToCart }) => {
       .finally(() => setLoadingProducts(false));
 
     // Pour recommandations IA (optionnel)
-    axios.get('/api/ai/recommendations')
+    axios.get(`${API_URL}/ai/recommendations`)
       .then(res => setRecommendations(res.data))
       .catch(() => {});
   }, []);
@@ -258,7 +260,16 @@ const Home = ({ user, onAddToCart }) => {
                 flexDirection: "column"
               }}>
                 <div style={{ position: "relative" }}>
-                  <img src={p.image_url || p.image || "/placeholder.jpg"} alt={p.name} style={{ width: "100%", height: 140, objectFit: "cover" }} />
+                  {(() => {
+                    let img = p.image_url || p.image;
+                    if (img && !img.startsWith('http') && img.startsWith('/uploads/')) {
+                      img = `${API_URL.replace('/api', '')}${img}`;
+                    }
+                    if (!img) img = '/placeholder.jpg';
+                    return (
+                      <img src={img} alt={p.name} style={{ width: "100%", height: 140, objectFit: "cover" }} />
+                    );
+                  })()}
                   {(p.co2_reduction || p.co2) && (
                     <span style={{
                       position: "absolute", top: 10, left: 10, background: "#22C55E", color: "#fff",

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
+const API_URL = process.env.REACT_APP_API_URL || 'https://greencard-backend.onrender.com/api';
+
 const Cart = ({ cart, onRemove, onClear, user }) => {
   const [showOrderForm, setShowOrderForm] = useState(false);
   const [address, setAddress] = useState(user?.default_address || '');
@@ -51,7 +53,7 @@ const Cart = ({ cart, onRemove, onClear, user }) => {
     }
 
     try {
-      await axios.post('/api/orders/', {
+      await axios.post(`${API_URL}/orders`, {
         consumer_id: user.id,
         address,
         payment,

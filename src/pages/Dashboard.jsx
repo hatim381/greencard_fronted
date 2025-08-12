@@ -4,6 +4,8 @@ import IAFormMeilleurProduit from './IAFormMeilleurProduit';
 import { orders } from '../services/api';
 import axios from 'axios';
 
+const API_URL = process.env.REACT_APP_API_URL || 'https://greencard-backend.onrender.com/api';
+
 const Dashboard = ({ user, setUser }) => {
   const [userOrders, setUserOrders] = useState([]);
   const [producerOrders, setProducerOrders] = useState([]);
@@ -22,7 +24,7 @@ const Dashboard = ({ user, setUser }) => {
     e.preventDefault();
     setWithdrawalMessage('');
     try {
-      const res = await axios.post('/api/auth/withdrawals', {
+      const res = await axios.post(`${API_URL}/auth/withdrawals`, {
         user_id: user.id,
         amount: parseFloat(withdrawalAmount),
         iban: withdrawalIban,
@@ -55,7 +57,7 @@ const Dashboard = ({ user, setUser }) => {
   // Fonction pour rafraîchir le user depuis l'API
   const refreshUser = async () => {
     if (user && user.id) {
-      const res = await axios.get('/api/auth/users');
+      const res = await axios.get(`${API_URL}/auth/users`);
       const updated = res.data.find(u => u.id === user.id);
       if (updated && setUser) setUser(updated);
     }
@@ -73,7 +75,7 @@ const Dashboard = ({ user, setUser }) => {
           .catch(() => setError("Erreur lors du chargement des commandes"))
           .finally(() => setLoading(false));
       } else if (user.role === 'producer') {
-        axios.get(`/api/orders/producer/${user.id}`)
+        axios.get(`${API_URL}/orders/producer/${user.id}`)
           .then(res => setProducerOrders(res.data))
           .catch(() => setError("Erreur lors du chargement des commandes reçues"))
           .finally(() => setLoading(false));
@@ -87,9 +89,9 @@ const Dashboard = ({ user, setUser }) => {
 
   // Fonction pour valider un produit dans une commande
   const handleValidateOrderItem = async (orderitem_id) => {
-    await axios.put(`/api/orders/orderitem/${orderitem_id}/status`, { status: "traitée" });
+    await axios.put(`${API_URL}/orders/orderitem/${orderitem_id}/status`, { status: "traitée" });
     // Recharge les commandes producteur
-    axios.get(`/api/orders/producer/${user.id}`)
+    axios.get(`${API_URL}/orders/producer/${user.id}`)
       .then(res => setProducerOrders(res.data));
     // Recharge le user pour afficher le solde à jour
     await refreshUser();
@@ -101,7 +103,7 @@ const Dashboard = ({ user, setUser }) => {
     setProfileMsg('');
     try {
       // Correction : le backend attend peut-être un champ "default_address"
-      await axios.put(`/api/auth/users/${user.id}`, {
+      await axios.put(`${API_URL}/auth/users/${user.id}`, {
         name: profileName,
         email: profileEmail,
         default_address: profileAddress // Assure-toi que ce champ existe côté backend
@@ -127,7 +129,7 @@ const Dashboard = ({ user, setUser }) => {
       return;
     }
     try {
-      await axios.put(`/api/auth/users/${user.id}/password`, { password: pwd1 });
+      await axios.put(`${API_URL}/auth/users/${user.id}/password`, { password: pwd1 });
       setPwdMsg("Mot de passe modifié !");
       setPwd1('');
       setPwd2('');
