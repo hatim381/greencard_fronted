@@ -1,4 +1,3 @@
-// src/services/api.js
 import axios from "axios";
 
 // Détection CRA (REACT_APP_*) ou Vite (import.meta.env)
@@ -11,7 +10,7 @@ export const API_URL =
 const http = axios.create({
   baseURL: API_URL,
   headers: { "Content-Type": "application/json" },
-  // timeout: 15000, // (optionnel) ajoute un timeout si besoin
+  // timeout: 15000,
 });
 
 // --- Auth ---
@@ -48,5 +47,4 @@ export const newsletter = {
   subscribe: (email) => http.post("/newsletter/subscribe", { email }),
 };
 
-// (optionnel) export par défaut pratique pour import global
 export default { auth, products, orders, ai, testimonials, newsletter, API_URL };
