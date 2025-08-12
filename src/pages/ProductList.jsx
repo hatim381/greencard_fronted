@@ -3,8 +3,8 @@ import axios from 'axios';
 import ProductCard from '../components/ProductCard';
 import ProducerProductForm from '../components/ProducerProductForm';
 
-// Définir l'URL de base de l'API
-const API_URL = 'https://greencard-backend.onrender.com/api';
+// Définir l'URL de base de l'API à partir des variables d'environnement
+const API_URL = process.env.REACT_APP_API_URL || 'https://greencard-backend.onrender.com/api';
 
 const ProductList = ({ onAddToCart, user }) => {
   const [items, setItems] = useState([]);
