@@ -1,8 +1,12 @@
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const Navbar = ({ cartCount, user, onLogout, darkMode, onToggleDarkMode }) => {
   const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? 'hidden' : '';
+  }, [menuOpen]);
 
   return (
   <nav style={{
@@ -37,12 +41,14 @@ const Navbar = ({ cartCount, user, onLogout, darkMode, onToggleDarkMode }) => {
     </div>
     <button
       className="mobile-menu-button"
-      onClick={() => setMenuOpen(!menuOpen)}
+      onClick={() => setMenuOpen(o => !o)}
       aria-label="Menu"
+      aria-expanded={menuOpen}
+      aria-controls="primary-navigation"
     >
       ☰
     </button>
-    <div className={`nav-links${menuOpen ? ' open' : ''}`} style={{
+    <div id="primary-navigation" className={`nav-links${menuOpen ? ' open' : ''}`} style={{
       gap: "2.7rem",
       fontSize: "1.15em",
       fontWeight: 700,
