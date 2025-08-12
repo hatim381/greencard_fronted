@@ -90,6 +90,42 @@ nav {
   text-decoration: none;
   font-weight: 500;
 }
+.mobile-menu-button {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  nav {
+    flex-wrap: wrap;
+  }
+
+  .mobile-menu-button {
+    display: flex;
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    color: var(--primary);
+    cursor: pointer;
+  }
+
+  .nav-links {
+    flex-direction: column;
+    width: 100%;
+    padding: 1rem 0;
+    display: none !important;
+    background: inherit;
+  }
+
+  .nav-links.open {
+    display: flex !important;
+  }
+
+  .nav-actions {
+    width: 100%;
+    justify-content: center;
+    margin-top: 1rem;
+  }
+}
 
 /* Hero section */
 .hero {
