@@ -13,6 +13,23 @@ const http = axios.create({
   // timeout: 15000,
 });
 
+// Ajoute automatiquement le token d'authentification à chaque requête
+http.interceptors.request.use((config) => {
+  const stored = localStorage.getItem("greencart_user");
+  if (stored) {
+    try {
+      const token = JSON.parse(stored)?.token;
+      if (token) {
+        config.headers = config.headers || {};
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+    } catch {
+      // ignore JSON parse errors and continue without token
+    }
+  }
+  return config;
+});
+
 // --- Auth ---
 export const auth = {
   register: (data) => http.post("/auth/register", data),
