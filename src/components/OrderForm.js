@@ -13,7 +13,12 @@ const OrderForm = () => {
       // ...existing code...
       setError(null);
     } catch (err) {
-      setError(err.message || "Erreur lors de la commande.");
+      let msg = err.message || "Erreur lors de la commande.";
+      if (err.message === "Network Error" || (err.request && !err.response)) {
+        msg =
+          "Erreur lors de la commande. Impossible de contacter le serveur. Veuillez vérifier votre connexion.";
+      }
+      setError(msg);
     }
   };
 

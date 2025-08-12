@@ -73,13 +73,18 @@ const Cart = ({ cart, onRemove, onClear, user }) => {
     } catch (err) {
       let msg = "Erreur lors de la commande.";
       const data = err.response?.data;
+
       if (typeof data === "string") {
         msg += ` ${data}`;
       } else if (data?.error || data?.message) {
         msg += ` ${data.error || data.message}`;
+      } else if (err.message === "Network Error" || (err.request && !err.response)) {
+        msg +=
+          " Impossible de contacter le serveur. Veuillez vérifier votre connexion.";
       } else if (err.message) {
         msg += ` ${err.message}`;
       }
+
       setError(msg);
     } finally {
       setLoading(false);
