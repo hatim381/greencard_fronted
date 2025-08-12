@@ -370,8 +370,7 @@ const Dashboard = ({ user, setUser }) => {
                   {withdrawalMessage && <div style={{ color: '#22C55E', marginTop: 8 }}>{withdrawalMessage}</div>}
                 </div>
               )}
-import React, { useState } from 'react';
-import axios from 'axios';
+ { useState }
             </div>
             <div style={{
               background: "#fff",
