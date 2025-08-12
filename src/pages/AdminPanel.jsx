@@ -3,6 +3,8 @@ import { products } from '../services/api';
 import axios from 'axios';
 import ProductCard from '../components/ProductCard';
 
+const API_URL = process.env.REACT_APP_API_URL || 'https://greencard-backend.onrender.com/api';
+
 const AdminPanel = () => {
   const [withdrawals, setWithdrawals] = useState([]);
   const [items, setItems] = useState([]);
@@ -12,17 +14,17 @@ const AdminPanel = () => {
 
   // Récupère les demandes de virement à chaque chargement
   useEffect(() => {
-    axios.get('/api/auth/withdrawals').then(res => setWithdrawals(res.data));
+    axios.get(`${API_URL}/auth/withdrawals`).then(res => setWithdrawals(res.data));
   }, []);
 
   const handleValidateWithdrawal = async (id) => {
-    await axios.delete(`/api/auth/withdrawals/${id}`);
+    await axios.delete(`${API_URL}/auth/withdrawals/${id}`);
     setWithdrawals(withdrawals.filter(w => w.id !== id));
   };
 
   useEffect(() => {
     products.getAll().then(res => setItems(res.data));
-    axios.get('/api/auth/users').then(res => {
+    axios.get(`${API_URL}/auth/users`).then(res => {
       const users = res.data;
       const ownerUser = users.find(u => u.role === 'owner');
       setOwner(ownerUser || null);
@@ -31,7 +33,7 @@ const AdminPanel = () => {
       const consumers = users.filter(u => u.role === 'consumer');
       console.log('Liste des consommateurs :', consumers);
     });
-    axios.get('/api/ai/recommendations').then(res => setRecommendations(res.data));
+    axios.get(`${API_URL}/ai/recommendations`).then(res => setRecommendations(res.data));
   }, []);
 
   // Check if user is admin (role stored in localStorage)
@@ -49,7 +51,7 @@ const AdminPanel = () => {
       {isAdmin && (
         <div style={{ marginBottom: 24, textAlign: 'right' }}>
           <a
-            href="http://localhost:5000/dash"
+            href={`${API_URL.replace('/api','')}/dash`}
             target="_blank"
             rel="noopener noreferrer"
             style={{

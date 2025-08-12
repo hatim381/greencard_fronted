@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 
+const API_URL = process.env.REACT_APP_API_URL || 'https://greencard-backend.onrender.com/api';
+
 /* Sélectionne n posts au hasard */
 function getRandomPosts(posts, n) {
 	if (posts.length <= n) return posts;
@@ -18,8 +20,8 @@ const Blog = () => {
 	useEffect(() => {
 		let isMounted = true;
 
-		axios
-			.get('/api/blog')
+                axios
+                        .get(`${API_URL}/blog`)
 			.then((res) => {
 				if (isMounted) {
 					setPosts(res.data);
