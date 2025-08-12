@@ -102,7 +102,7 @@ const Navbar = ({ cartCount, user, onLogout, darkMode, onToggleDarkMode }) => {
         }}>Admin</Link>
       )}
     </div>
-    <div className="nav-actions" style={{ display: "flex", alignItems: "center", gap: 22 }}>
+    <div className={`nav-actions${menuOpen ? ' open' : ''}`}>
       {(!user || user.role === 'consumer') && (
         <Link to="/cart" className="cart-icon" style={{
           position: 'relative',
