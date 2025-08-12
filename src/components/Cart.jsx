@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { orders } from '../services/api';
 
 const Cart = ({ cart, onRemove, onClear, user }) => {
   const [showOrderForm, setShowOrderForm] = useState(false);
@@ -51,7 +51,7 @@ const Cart = ({ cart, onRemove, onClear, user }) => {
     }
 
     try {
-      await axios.post('/api/orders/', {
+      await orders.create({
         consumer_id: user.id,
         address,
         payment,
@@ -60,8 +60,8 @@ const Cart = ({ cart, onRemove, onClear, user }) => {
         instructions,
         items: cart.map(item => ({
           product_id: item.id || item.product_id,
-          quantity: item.quantity
-        }))
+          quantity: item.quantity,
+        })),
       });
       setOrderMsg("Commande passée avec succès !");
       onClear();
@@ -73,8 +73,13 @@ const Cart = ({ cart, onRemove, onClear, user }) => {
       setInstructions('');
     } catch (err) {
       let msg = "Erreur lors de la commande.";
-      if (err.response?.data?.error) {
-        msg += " " + err.response.data.error;
+      const data = err.response?.data;
+      if (typeof data === 'string') {
+        msg += ` ${data}`;
+      } else if (data?.error || data?.message) {
+        msg += ` ${data.error || data.message}`;
+      } else if (err.message) {
+        msg += ` ${err.message}`;
       }
       setError(msg);
     } finally {

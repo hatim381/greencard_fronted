@@ -3,8 +3,8 @@ import axios from 'axios';
 import ProductCard from '../components/ProductCard';
 import ProducerProductForm from '../components/ProducerProductForm';
 
-// Définir l'URL de base de l'API
-const API_URL = 'https://greencard-backend.onrender.com/api';
+// Définir l'URL de base de l'API à partir des variables d'environnement
+const API_URL = process.env.REACT_APP_API_URL || 'https://greencard-backend.onrender.com/api';
 
 const ProductList = ({ onAddToCart, user }) => {
   const [items, setItems] = useState([]);
@@ -110,18 +110,27 @@ const ProductList = ({ onAddToCart, user }) => {
             }}
           >
             <div style={{ position: "relative" }}>
-              <img
-                src={p.image_url || p.image || "/placeholder.jpg"}
-                alt={p.name}
-                style={{
-                  width: "100%",
-                  height: 180,
-                  objectFit: "cover",
-                  background: "#f3f3f3",
-                  borderTopLeftRadius: 16,
-                  borderTopRightRadius: 16,
-                }}
-              />
+              {(() => {
+                let img = p.image_url || p.image;
+                if (img && !img.startsWith('http') && img.startsWith('/uploads/')) {
+                  img = `${API_URL.replace('/api', '')}${img}`;
+                }
+                if (!img) img = '/placeholder.jpg';
+                return (
+                  <img
+                    src={img}
+                    alt={p.name}
+                    style={{
+                      width: "100%",
+                      height: 180,
+                      objectFit: "cover",
+                      background: "#f3f3f3",
+                      borderTopLeftRadius: 16,
+                      borderTopRightRadius: 16,
+                    }}
+                  />
+                );
+              })()}
               {(p.co2_reduction || p.co2) && (
                 <span style={{
                   position: "absolute",

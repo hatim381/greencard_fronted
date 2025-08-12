@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import axios from 'axios';
-
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
@@ -23,6 +22,8 @@ import Accessibilite from './pages/Accessibilite';
 import PlanDuSite from './pages/PlanDuSite';
 import Faq from './pages/Faq';
 
+const API_URL = process.env.REACT_APP_API_URL || 'https://greencard-backend.onrender.com/api';
+
 function App() {
   const [user, setUser] = useState(() => {
     // Persistance utilisateur (optionnel)
@@ -41,7 +42,7 @@ function App() {
   const fetchUserFromAPI = async (userObj) => {
     if (!userObj) return null;
     try {
-      const res = await axios.get('/api/auth/users');
+      const res = await axios.get(`${API_URL}/auth/users`);
       const updated = res.data.find(u => u.id === userObj.id);
       if (updated) {
         setUser(updated);
