@@ -1,32 +1,30 @@
 import axios from 'axios';
-
-// Utilise l'URL de l'API depuis les variables d'environnement ou la valeur de repli
-const API_URL = process.env.REACT_APP_API_URL || 'https://greencard-backend.onrender.com/api';
+// axios.defaults.baseURL est configuré dans index.js
 
 export const auth = {
-  register: (data) => axios.post(`${API_URL}/auth/register`, data),
-  login: (data) => axios.post(`${API_URL}/auth/login`, data),
+  register: (data) => axios.post('/auth/register', data),
+  login: (data) => axios.post('/auth/login', data),
 };
 
 export const products = {
-  getAll: () => axios.get(`${API_URL}/products/`),
-  add: (data) => axios.post(`${API_URL}/products/`, data),
-  update: (id, data) => axios.put(`${API_URL}/products/${id}`, data),
+  getAll: () => axios.get('/products/'),
+  add: (data) => axios.post('/products/', data),
+  update: (id, data) => axios.put(`/products/${id}`, data),
 };
 
 export const orders = {
-  create: (data) => axios.post(`${API_URL}/orders`, data),
-  getByUser: (userId) => axios.get(`${API_URL}/orders/${userId}`),
+  create: (data) => axios.post('/orders', data),
+  getByUser: (userId) => axios.get(`/orders/${userId}`),
 };
 
 export const ai = {
-  getRecommendations: () => axios.get(`${API_URL}/ai/recommendations`),
+  getRecommendations: () => axios.get('/ai/recommendations'),
 };
 
 export const testimonials = {
-  getAll: () => axios.get(`${API_URL}/testimonials`),
+  getAll: () => axios.get('/testimonials'),
 };
 
 export const newsletter = {
-  subscribe: (email) => axios.post(`${API_URL}/newsletter/subscribe`, { email }),
+  subscribe: (email) => axios.post('/newsletter/subscribe', { email }),
 };

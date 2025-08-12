@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-
-const API_URL = process.env.REACT_APP_API_URL || 'https://greencard-backend.onrender.com/api';
+import { orders } from '../services/api';
 
 const Cart = ({ cart, onRemove, onClear, user }) => {
   const [showOrderForm, setShowOrderForm] = useState(false);
@@ -53,25 +51,18 @@ const Cart = ({ cart, onRemove, onClear, user }) => {
     }
 
     try {
-      const headers = user?.token
-        ? { Authorization: `Bearer ${user.token}` }
-        : undefined;
-      await axios.post(
-        `${API_URL}/orders`,
-        {
-          consumer_id: user.id,
-          address,
-          payment,
-          email,
-          phone,
-          instructions,
-          items: cart.map(item => ({
-            product_id: item.id || item.product_id,
-            quantity: item.quantity,
-          })),
-        },
-        { headers }
-      );
+      await orders.create({
+        consumer_id: user.id,
+        address,
+        payment,
+        email,
+        phone,
+        instructions,
+        items: cart.map(item => ({
+          product_id: item.id || item.product_id,
+          quantity: item.quantity,
+        })),
+      });
       setOrderMsg("Commande passée avec succès !");
       onClear();
       setShowOrderForm(false);
@@ -82,8 +73,13 @@ const Cart = ({ cart, onRemove, onClear, user }) => {
       setInstructions('');
     } catch (err) {
       let msg = "Erreur lors de la commande.";
-      if (err.response?.data?.error || err.response?.data?.message) {
-        msg += " " + (err.response.data.error || err.response.data.message);
+      const data = err.response?.data;
+      if (typeof data === 'string') {
+        msg += ` ${data}`;
+      } else if (data?.error || data?.message) {
+        msg += ` ${data.error || data.message}`;
+      } else if (err.message) {
+        msg += ` ${err.message}`;
       }
       setError(msg);
     } finally {
