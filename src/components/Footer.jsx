@@ -1,5 +1,7 @@
 import { useState } from 'react';
 
+const API_URL = process.env.REACT_APP_API_URL || 'https://greencard-backend.onrender.com/api';
+
 const Footer = () => {
   const [email, setEmail] = useState('');
   const [msg, setMsg] = useState('');
@@ -7,7 +9,7 @@ const Footer = () => {
   const handleSubscribe = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch('/api/newsletter/subscribe', {
+      const res = await fetch(`${API_URL}/newsletter/subscribe`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email })

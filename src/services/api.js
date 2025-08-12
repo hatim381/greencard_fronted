@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_URL = process.env.REACT_APP_API_URL;
+// Utilise l'URL de l'API depuis les variables d'environnement ou la valeur de repli
+const API_URL = process.env.REACT_APP_API_URL || 'https://greencard-backend.onrender.com/api';
 
 export const auth = {
   register: (data) => axios.post(`${API_URL}/auth/register`, data),
