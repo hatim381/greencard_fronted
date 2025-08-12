@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { products } from '../services/api';
+import axios from 'axios';
 import ProductCard from '../components/ProductCard';
 import ProducerProductForm from '../components/ProducerProductForm';
+
+// Définir l'URL de base de l'API
+const API_URL = 'https://greencard-backend.onrender.com/api';
 
 const ProductList = ({ onAddToCart, user }) => {
   const [items, setItems] = useState([]);
@@ -19,12 +22,12 @@ const ProductList = ({ onAddToCart, user }) => {
   }
 
   useEffect(() => {
-    products.getAll()
+    // Modification de l'appel API pour inclure l'URL complète
+    axios.get(`${API_URL}/products`)
       .then(res => {
         if (user && user.role === 'producer') {
           setItems(res.data.filter(p => p.producer_id === user.id));
         } else {
-          // Côté consommateur : uniquement produits quantité > 0 ET non périmés
           setItems(res.data.filter(p => p.quantity > 0 && !isExpired(p)));
         }
       })
@@ -42,12 +45,12 @@ const ProductList = ({ onAddToCart, user }) => {
     setEditProduct(null);
     if (refresh) {
       setLoading(true);
-      products.getAll()
+      // Modification de l'appel API pour inclure l'URL complète
+      axios.get(`${API_URL}/products`)
         .then(res => {
           if (user && user.role === 'producer') {
             setItems(res.data.filter(p => p.producer_id === user.id));
           } else {
-            // Correction : filtrer quantité > 0 ET non périmés pour consommateur
             setItems(res.data.filter(p => p.quantity > 0 && !isExpired(p)));
           }
         })
