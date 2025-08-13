@@ -1,8 +1,14 @@
 import React from 'react';
 
+const API_URL = process.env.REACT_APP_API_URL || 'https://greencard-backend.onrender.com/api';
+
 const ProductCard = ({ product }) => {
-  const defaultImage = '/default-product.png'; // Placez une image par défaut dans public/
-  const imageUrl = product.imageUrl || defaultImage;
+  const defaultImage = '/placeholder.jpg';
+  let imageUrl = product.image_url || product.imageUrl || product.image;
+  if (imageUrl && !imageUrl.startsWith('http') && imageUrl.startsWith('/uploads')) {
+    imageUrl = `${API_URL.replace('/api', '')}${imageUrl}`;
+  }
+  if (!imageUrl) imageUrl = defaultImage;
 
   return (
     <div className="product-card">
