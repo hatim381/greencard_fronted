@@ -113,12 +113,7 @@ const Home = ({ user, onAddToCart }) => {
   return (
     <div style={{ background: "#F8FAFB" }}>
       {/* Hero */}
-      <section className="hero" style={{
-        background: "#22C55E",
-        color: "#fff",
-        padding: "4rem 0 3rem 0",
-        textAlign: "center"
-      }}>
+      <section className="hero">
         <img src="/Images/logo.jpeg" alt="GreenCart" style={{ height: 200, marginBottom: 18, borderRadius: 24, background: "#F0FDF4" }} />
         <h1 style={{ fontSize: "2.7rem", fontWeight: 700, margin: 0 }}>Mangez local, luttez contre le gaspillage</h1>
         <p style={{ fontSize: "1.15rem", margin: "1.2rem 0 2.2rem 0" }}>
@@ -420,38 +415,14 @@ const Home = ({ user, onAddToCart }) => {
       </section>
 
       {/* Producteurs */}
-      <section
-        style={{
-          maxWidth: 900,
-          margin: "0 auto",
-          textAlign: "center",
-          marginBottom: "2.5rem"
-        }}
-      >
+      <section className="producers-section">
         <h2 style={{ marginBottom: 8 }}>Pour les producteurs</h2>
         <div style={{ color: "#444", marginBottom: 28 }}>
           Rejoignez notre réseau de producteurs engagés et bénéficiez d’outils modernes pour développer votre activité.
         </div>
-        <div
-          style={{
-            display: "flex",
-            gap: 18,
-            justifyContent: "center",
-            marginBottom: 28,
-            flexWrap: "wrap"
-          }}
-        >
+        <div className="producer-cards">
           {producerCards.map((c, i) => (
-            <div key={i} style={{
-              background: "#fff",
-              borderRadius: 12,
-              boxShadow: "0 2px 8px #0001",
-              padding: "1.5em 1em",
-              minWidth: 220,
-              maxWidth: 300,
-              flex: "1 1 220px",
-              textAlign: "left"
-            }}>
+            <div key={i} className="producer-card">
               <div style={{ fontSize: 28, color: "#22C55E", marginBottom: 10 }}>{c.icon}</div>
               <div style={{ fontWeight: 600, marginBottom: 6 }}>{c.title}</div>
               <div style={{ color: "#444", fontSize: "0.98em" }}>{c.text}</div>
@@ -462,28 +433,12 @@ const Home = ({ user, onAddToCart }) => {
       </section>
 
       {/* Impact */}
-      <section
-        style={{
-          background: "#22C55E",
-          color: "#fff",
-          padding: window.innerWidth < 600 ? "2rem 0" : "3rem 0",
-          textAlign: "center",
-          marginBottom: "2.5rem"
-        }}
-      >
+      <section className="impact-section">
         <h2 style={{ marginBottom: 8 }}>Votre impact</h2>
         <div style={{ marginBottom: 28 }}>Chaque achat sur GreenCart contribue à un système alimentaire plus durable.</div>
-        <div
-          style={{
-            display: "flex",
-            gap: 28,
-            justifyContent: "center",
-            marginBottom: 32,
-            flexWrap: "wrap"
-          }}
-        >
+        <div className="impact-cards">
           {impactCards.map((c, i) => (
-            <div key={i} style={{ minWidth: 220 }}>
+            <div key={i} className="impact-card">
               <div style={{ fontSize: 32, marginBottom: 8 }}>{c.icon}</div>
               <div style={{ fontWeight: 600, marginBottom: 4 }}>{c.title}</div>
               <div style={{ fontSize: "0.98em" }}>{c.text}</div>
@@ -494,33 +449,12 @@ const Home = ({ user, onAddToCart }) => {
       </section>
 
       {/* Témoignages */}
-      <section
-        style={{
-          maxWidth: 1200,
-          margin: "0 auto",
-          marginBottom: "2.5rem"
-        }}
-      >
+      <section className="testimonials-section">
         <div style={{ textAlign: "center", color: "#22C55E", fontWeight: 600, fontSize: "0.95em", letterSpacing: 1, marginBottom: 4 }}>TÉMOIGNAGES</div>
         <h2 style={{ textAlign: "center", marginBottom: 18 }}>Ce que disent nos clients</h2>
-        <div
-          style={{
-            display: "flex",
-            gap: 18,
-            justifyContent: "center",
-            flexWrap: "wrap"
-          }}
-        >
+        <div className="testimonials-grid">
           {testimonials.map((t, i) => (
-            <div key={i} style={{
-              background: "#fff",
-              borderRadius: 12,
-              boxShadow: "0 2px 8px #0001",
-              padding: "1.2em 1em",
-              minWidth: 220,
-              maxWidth: 320,
-              flex: "1 1 220px"
-            }}>
+            <div key={i} className="testimonial-card">
               <div style={{ fontWeight: 600 }}>{t.name}</div>
               <div style={{ color: "#fbbf24", fontSize: "1.1em", margin: "0.2em 0" }}>
                 {'★'.repeat(t.rating)}{'☆'.repeat(5 - t.rating)}
