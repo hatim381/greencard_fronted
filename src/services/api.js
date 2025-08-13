@@ -10,6 +10,8 @@ export const API_URL =
 const http = axios.create({
   baseURL: API_URL,
   headers: { "Content-Type": "application/json" },
+  // Empêche l'envoi automatique des cookies sur les requêtes cross-origin
+  withCredentials: false,
   // timeout: 15000,
 });
 
