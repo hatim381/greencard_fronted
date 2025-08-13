@@ -126,7 +126,7 @@ const Footer = () => {
           margin: "0 auto",
           padding: "0 2rem",
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(200px,1fr))",
+          gridTemplateColumns: window.innerWidth < 700 ? "1fr" : "repeat(auto-fit, minmax(200px,1fr))",
           gap: 32
         }}>
           {/* GreenCart */}
@@ -180,7 +180,7 @@ const Footer = () => {
           paddingTop: 18,
           color: "#b6c2d1",
           fontSize: "0.97em",
-          display: "flex",
+          display: window.innerWidth < 600 ? "block" : "flex",
           justifyContent: "space-between",
           alignItems: "center",
           maxWidth: 1200,

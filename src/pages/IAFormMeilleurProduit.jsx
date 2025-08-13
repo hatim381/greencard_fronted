@@ -30,7 +30,14 @@ export default function IAFormMeilleurProduit() {
   return (
     <div>
       <h4 style={{ color: '#16A34A', marginBottom: 12 }}>Trouver le meilleur produit</h4>
-      <form onSubmit={handleSubmit} style={{ display: 'flex', gap: 16, alignItems: 'center', flexWrap: 'wrap' }}>
+      <form onSubmit={handleSubmit} style={{
+        display: 'flex',
+        gap: 16,
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        flexDirection: window.innerWidth < 500 ? 'column' : 'row',
+        width: "100%"
+      }}>
         <select value={categorie} onChange={e => setCategorie(e.target.value)}>{categories.map(c => <option key={c}>{c}</option>)}</select>
         <input type="number" min={1} max={12} value={mois} onChange={e => setMois(Number(e.target.value))} style={{ width: 70 }} />
         <button className="btn btn-primary" type="submit" disabled={loading}>{loading ? "Recherche..." : "Trouver"}</button>

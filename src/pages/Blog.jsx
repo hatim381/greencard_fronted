@@ -71,14 +71,14 @@ const Blog = () => {
 
 	/* 4. Affichage normal */
 	return (
-		<main style={{ maxWidth: 800, margin: '0 auto', padding: '2em 1em' }}>
+		<main style={{ maxWidth: 800, margin: '0 auto', padding: window.innerWidth < 600 ? '1em 0.5em' : '2em 1em' }}>
 			<h2
 				style={{
 					color: '#22C55E',
 					textAlign: 'center',
 					marginBottom: 32,
 					fontWeight: 800,
-					fontSize: '2em',
+					fontSize: window.innerWidth < 600 ? '1.3em' : '2em',
 				}}
 			>
 				Conseils & Astuces anti-gaspillage
@@ -87,12 +87,12 @@ const Blog = () => {
 			<div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
 				{displayed.map((post) => (
 					<article
-						key={post.id ?? post.title} /* id si dispo, sinon titre */
+						key={post.id ?? post.title}
 						style={{
 							background: '#fff',
 							borderRadius: 16,
 							boxShadow: '0 2px 8px #22C55E11',
-							padding: '2em',
+							padding: window.innerWidth < 600 ? '1em' : '2em',
 							border: '1.5px solid #E5E7EB',
 						}}
 					>

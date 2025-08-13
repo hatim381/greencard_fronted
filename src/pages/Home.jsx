@@ -113,7 +113,12 @@ const Home = ({ user, onAddToCart }) => {
   return (
     <div style={{ background: "#F8FAFB" }}>
       {/* Hero */}
-      <section className="hero" style={{ background: "#22C55E", color: "#fff", padding: "4rem 0 3rem 0", textAlign: "center" }}>
+      <section className="hero" style={{
+        background: "#22C55E",
+        color: "#fff",
+        padding: "4rem 0 3rem 0",
+        textAlign: "center"
+      }}>
         <img src="/Images/logo.jpeg" alt="GreenCart" style={{ height: 200, marginBottom: 18, borderRadius: 24, background: "#F0FDF4" }} />
         <h1 style={{ fontSize: "2.7rem", fontWeight: 700, margin: 0 }}>Mangez local, luttez contre le gaspillage</h1>
         <p style={{ fontSize: "1.15rem", margin: "1.2rem 0 2.2rem 0" }}>
@@ -184,7 +189,15 @@ const Home = ({ user, onAddToCart }) => {
       </section>
 
       {/* Stats */}
-      <section style={{ display: "flex", justifyContent: "center", gap: "4rem", margin: "2.5rem 0 2.5rem 0" }}>
+      <section
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          gap: "4rem",
+          margin: "2.5rem 0 2.5rem 0",
+          flexWrap: "wrap"
+        }}
+      >
         <div style={{ textAlign: "center" }}>
           <div style={{ color: "#22C55E", fontWeight: 700, fontSize: "2rem" }}>1,200+</div>
           <div style={{ color: "#222", fontWeight: 500 }}>Producteurs locaux</div>
@@ -204,7 +217,16 @@ const Home = ({ user, onAddToCart }) => {
       </section>
 
       {/* Catégories + produits populaires */}
-      <section style={{ background: "#fff", borderRadius: 16, maxWidth: 1200, margin: "0 auto", padding: "2.5rem 2rem 2rem 2rem", marginBottom: "2.5rem" }}>
+      <section
+        style={{
+          background: "#fff",
+          borderRadius: 16,
+          maxWidth: 1200,
+          margin: "0 auto",
+          padding: "2.5rem 2rem 2rem 2rem",
+          marginBottom: "2.5rem"
+        }}
+      >
         <div style={{ textAlign: "center", color: "#22C55E", fontWeight: 600, fontSize: "0.95em", letterSpacing: 1, marginBottom: 4 }}>
           NOS CATÉGORIES
         </div>
@@ -247,7 +269,13 @@ const Home = ({ user, onAddToCart }) => {
         ) : errorProducts ? (
           <div style={{ textAlign: "center", color: "#e11d48", margin: "2em 0" }}>{errorProducts}</div>
         ) : products.length > 0 ? (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 18 }}>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: window.innerWidth < 700 ? "1fr" : window.innerWidth < 1000 ? "1fr 1fr" : "repeat(4,1fr)",
+              gap: 18
+            }}
+          >
             {products.map((p, i) => (
               <div key={i} style={{
                 background: "#fff",
@@ -335,8 +363,31 @@ const Home = ({ user, onAddToCart }) => {
       </section>
 
       {/* Mission */}
-      <section style={{ display: "flex", gap: "3rem", alignItems: "center", background: "#fff", borderRadius: 16, maxWidth: 1200, margin: "0 auto", padding: "2.5rem 2rem", marginBottom: "2.5rem" }}>
-        <img src="/img/mission.jpg" alt="Producteur" style={{ width: 320, height: 380, objectFit: "cover", borderRadius: 14, boxShadow: "0 2px 8px #0001" }} />
+      <section
+        style={{
+          display: window.innerWidth < 900 ? "block" : "flex",
+          gap: "3rem",
+          alignItems: "center",
+          background: "#fff",
+          borderRadius: 16,
+          maxWidth: 1200,
+          margin: "0 auto",
+          padding: "2.5rem 2rem",
+          marginBottom: "2.5rem"
+        }}
+      >
+        <img
+          src="/img/mission.jpg"
+          alt="Producteur"
+          style={{
+            width: window.innerWidth < 600 ? "100%" : 320,
+            height: window.innerWidth < 600 ? 180 : 380,
+            objectFit: "cover",
+            borderRadius: 14,
+            boxShadow: "0 2px 8px #0001",
+            marginBottom: window.innerWidth < 900 ? 18 : 0
+          }}
+        />
         <div>
           <h2 style={{ marginTop: 0 }}>Notre mission</h2>
           <div style={{ color: "#444", fontSize: "1.08em", marginBottom: 18 }}>
@@ -369,12 +420,27 @@ const Home = ({ user, onAddToCart }) => {
       </section>
 
       {/* Producteurs */}
-      <section style={{ maxWidth: 900, margin: "0 auto", textAlign: "center", marginBottom: "2.5rem" }}>
+      <section
+        style={{
+          maxWidth: 900,
+          margin: "0 auto",
+          textAlign: "center",
+          marginBottom: "2.5rem"
+        }}
+      >
         <h2 style={{ marginBottom: 8 }}>Pour les producteurs</h2>
         <div style={{ color: "#444", marginBottom: 28 }}>
           Rejoignez notre réseau de producteurs engagés et bénéficiez d’outils modernes pour développer votre activité.
         </div>
-        <div style={{ display: "flex", gap: 18, justifyContent: "center", marginBottom: 28 }}>
+        <div
+          style={{
+            display: "flex",
+            gap: 18,
+            justifyContent: "center",
+            marginBottom: 28,
+            flexWrap: "wrap"
+          }}
+        >
           {producerCards.map((c, i) => (
             <div key={i} style={{
               background: "#fff",
@@ -396,10 +462,26 @@ const Home = ({ user, onAddToCart }) => {
       </section>
 
       {/* Impact */}
-      <section style={{ background: "#22C55E", color: "#fff", padding: "3rem 0", textAlign: "center", marginBottom: "2.5rem" }}>
+      <section
+        style={{
+          background: "#22C55E",
+          color: "#fff",
+          padding: window.innerWidth < 600 ? "2rem 0" : "3rem 0",
+          textAlign: "center",
+          marginBottom: "2.5rem"
+        }}
+      >
         <h2 style={{ marginBottom: 8 }}>Votre impact</h2>
         <div style={{ marginBottom: 28 }}>Chaque achat sur GreenCart contribue à un système alimentaire plus durable.</div>
-        <div style={{ display: "flex", gap: 28, justifyContent: "center", marginBottom: 32 }}>
+        <div
+          style={{
+            display: "flex",
+            gap: 28,
+            justifyContent: "center",
+            marginBottom: 32,
+            flexWrap: "wrap"
+          }}
+        >
           {impactCards.map((c, i) => (
             <div key={i} style={{ minWidth: 220 }}>
               <div style={{ fontSize: 32, marginBottom: 8 }}>{c.icon}</div>
@@ -412,10 +494,23 @@ const Home = ({ user, onAddToCart }) => {
       </section>
 
       {/* Témoignages */}
-      <section style={{ maxWidth: 1200, margin: "0 auto", marginBottom: "2.5rem" }}>
+      <section
+        style={{
+          maxWidth: 1200,
+          margin: "0 auto",
+          marginBottom: "2.5rem"
+        }}
+      >
         <div style={{ textAlign: "center", color: "#22C55E", fontWeight: 600, fontSize: "0.95em", letterSpacing: 1, marginBottom: 4 }}>TÉMOIGNAGES</div>
         <h2 style={{ textAlign: "center", marginBottom: 18 }}>Ce que disent nos clients</h2>
-        <div style={{ display: "flex", gap: 18, justifyContent: "center", flexWrap: "wrap" }}>
+        <div
+          style={{
+            display: "flex",
+            gap: 18,
+            justifyContent: "center",
+            flexWrap: "wrap"
+          }}
+        >
           {testimonials.map((t, i) => (
             <div key={i} style={{
               background: "#fff",

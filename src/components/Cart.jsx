@@ -98,8 +98,9 @@ const Cart = ({ cart, onRemove, onClear, user }) => {
         margin: "0 auto",
         background: "#fff",
         borderRadius: 12,
-        padding: "2em",
+        padding: window.innerWidth < 600 ? "1em" : "2em",
         boxShadow: "0 2px 8px #0001",
+        width: "100%"
       }}
     >
       <h2 style={{ textAlign: "center", marginBottom: 24 }}>Mon panier</h2>
@@ -116,8 +117,8 @@ const Cart = ({ cart, onRemove, onClear, user }) => {
         </div>
       ) : (
         <div>
-          <div className="table-wrapper">
-            <table style={{ width: "100%", marginBottom: 24 }}>
+          <div className="table-wrapper" style={{ overflowX: "auto" }}>
+            <table style={{ width: "100%", marginBottom: 24, minWidth: 350 }}>
               <thead>
               <tr style={{ background: "#F3F4F6" }}>
                 <th style={{ textAlign: "left", padding: 8 }}>Produit</th>
@@ -197,6 +198,7 @@ const Cart = ({ cart, onRemove, onClear, user }) => {
                 background: "#F8FAFB",
                 padding: 16,
                 borderRadius: 8,
+                width: "100%"
               }}
             >
               <div style={{ marginBottom: 10 }}>

@@ -207,7 +207,8 @@ const Dashboard = ({ user, setUser }) => {
       background: "#F8FAFB",
       borderRadius: 18,
       boxShadow: "0 4px 24px #22C55E11",
-      padding: "2.5em 1.5em"
+      padding: window.innerWidth < 600 ? "1.2em 0.5em" : "2.5em 1.5em",
+      width: "100%"
     }}>
       {/* Nom de l'utilisateur */}
       <div style={{
@@ -227,7 +228,7 @@ const Dashboard = ({ user, setUser }) => {
         background: "#fff",
         borderRadius: 22,
         boxShadow: "0 8px 32px #22C55E22",
-        padding: "2.5em 2.2em 2em 2.2em",
+        padding: window.innerWidth < 600 ? "1.2em 1em" : "2.5em 2.2em 2em 2.2em",
         marginBottom: 48,
         maxWidth: 540,
         marginLeft: "auto",
@@ -318,7 +319,7 @@ const Dashboard = ({ user, setUser }) => {
         <div>
           {/* Statistiques producteur */}
           <div style={{
-            display: "flex",
+            display: 'flex',
             gap: 28,
             flexWrap: "wrap",
             justifyContent: "center",
@@ -406,9 +407,8 @@ const Dashboard = ({ user, setUser }) => {
             background: '#fff',
             borderRadius: 16,
             boxShadow: '0 2px 8px #22C55E11',
-            padding: '2em',
-            marginBottom: 36,
-            marginTop: 36
+            padding: window.innerWidth < 600 ? '1em' : '2em',
+            marginBottom: 36
           }}>
             <h3 style={{ color: '#22C55E', marginTop: 0, fontWeight: 700, fontSize: "1.18em" }}>Outils IA pour producteurs</h3>
             {/* Prédiction de bonne vente */}
@@ -423,7 +423,7 @@ const Dashboard = ({ user, setUser }) => {
             background: '#fff',
             borderRadius: 16,
             boxShadow: '0 2px 8px #22C55E11',
-            padding: '2em',
+            padding: window.innerWidth < 600 ? '1em' : '2em',
             marginBottom: 36
           }}>
             <h3 style={{ color: '#22C55E', marginTop: 0, fontWeight: 700, fontSize: "1.18em" }}>Commandes à traiter</h3>

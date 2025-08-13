@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 export default function PlanDuSite() {
   return (
-    <main style={{ maxWidth: 900, margin: "0 auto", padding: "2em 1em" }}>
+    <main style={{ maxWidth: 900, margin: "0 auto", padding: window.innerWidth < 600 ? "1em 0.5em" : "2em 1em" }}>
       <section>
         <h1 style={{ color: "#22C55E", fontWeight: 800, marginBottom: 18 }}>Plan du site</h1>
         <ul style={{ margin: "1.5em 0", paddingLeft: 24, fontSize: "1.1em" }}>
