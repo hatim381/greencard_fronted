@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
+import Meta from '../components/Meta';
 
 const API_URL = process.env.REACT_APP_API_URL || 'https://greencard-backend.onrender.com/api';
 
@@ -70,8 +71,9 @@ const Blog = () => {
 	}
 
 	/* 4. Affichage normal */
-	return (
-		<main style={{ maxWidth: 800, margin: '0 auto', padding: window.innerWidth < 600 ? '1em 0.5em' : '2em 1em' }}>
+        return (
+                <main style={{ maxWidth: 800, margin: '0 auto', padding: window.innerWidth < 600 ? '1em 0.5em' : '2em 1em' }}>
+                        <Meta title="GreenCart – Conseils" />
 			<h2
 				style={{
 					color: '#22C55E',

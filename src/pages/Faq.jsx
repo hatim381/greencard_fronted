@@ -1,8 +1,10 @@
 import React from "react";
+import Meta from '../components/Meta';
 
 export default function Faq() {
   return (
     <main style={{ maxWidth: 900, margin: "0 auto", padding: "2em 1em" }}>
+      <Meta title="GreenCart – FAQ" />
       <section>
         <h1 style={{ color: "#22C55E", fontWeight: 800, marginBottom: 18 }}>Foire aux questions (FAQ)</h1>
         <div style={{ marginBottom: 24 }}>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import Meta from '../components/Meta';
 
 const API_URL = process.env.REACT_APP_API_URL || 'https://greencard-backend.onrender.com/api';
 
@@ -29,6 +30,7 @@ export default function IAFormMeilleurProduit() {
 
   return (
     <div>
+      <Meta title="GreenCart – IA Meilleur produit" />
       <h4 style={{ color: '#16A34A', marginBottom: 12 }}>Trouver le meilleur produit</h4>
       <form onSubmit={handleSubmit} style={{
         display: 'flex',

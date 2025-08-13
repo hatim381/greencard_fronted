@@ -28,6 +28,9 @@ body {
   background-color: var(--gray-100);
   color: var(--gray-900);
 }
+body.menu-open {
+  overflow: hidden;
+}
 body.dark {
   background-color: #181F2A;
   color: #fff;

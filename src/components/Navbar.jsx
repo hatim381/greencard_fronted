@@ -5,7 +5,7 @@ const Navbar = ({ cartCount, user, onLogout, darkMode, onToggleDarkMode }) => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    document.body.style.overflow = menuOpen ? 'hidden' : '';
+    document.body.classList.toggle('menu-open', menuOpen);
   }, [menuOpen]);
 
   return (

@@ -6,28 +6,14 @@ export const API_URL =
   process.env.REACT_APP_API_URL ||
   "https://greencard-backend.onrender.com/api";
 
-// Instance Axios dédiée à l'API
+// Instance Axios dédiée à l'API. Les jetons JWT sont désormais
+// gérés côté serveur via un cookie httpOnly, nous n'insérons donc
+// plus de token depuis le localStorage.
 const http = axios.create({
   baseURL: API_URL,
   headers: { "Content-Type": "application/json" },
+  withCredentials: true,
   // timeout: 15000,
-});
-
-// Ajoute automatiquement le token d'authentification à chaque requête
-http.interceptors.request.use((config) => {
-  const stored = localStorage.getItem("greencart_user");
-  if (stored) {
-    try {
-      const token = JSON.parse(stored)?.token;
-      if (token) {
-        config.headers = config.headers || {};
-        config.headers.Authorization = `Bearer ${token}`;
-      }
-    } catch {
-      // ignore JSON parse errors and continue without token
-    }
-  }
-  return config;
 });
 
 // --- Auth ---

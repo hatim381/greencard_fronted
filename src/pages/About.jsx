@@ -1,8 +1,10 @@
 import React from "react";
+import Meta from '../components/Meta';
 
 export default function About() {
   return (
     <main style={{ maxWidth: 900, margin: "0 auto", padding: "2em 1em" }}>
+      <Meta title="GreenCart – À propos" />
       <section>
         <h1 style={{ color: "#22C55E", fontWeight: 800, marginBottom: 18 }}>À propos de GreenCart</h1>
         <p>

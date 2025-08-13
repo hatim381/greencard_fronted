@@ -1,8 +1,10 @@
 import React from "react";
+import Meta from '../components/Meta';
 
 export default function Impact() {
   return (
     <main style={{ maxWidth: 900, margin: "0 auto", padding: "2em 1em" }}>
+      <Meta title="GreenCart – Impact" />
       <section>
         <h1 style={{ color: "#22C55E", fontWeight: 800, marginBottom: 18 }}>Notre impact</h1>
         <p>

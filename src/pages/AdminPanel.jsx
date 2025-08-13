@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { products } from '../services/api';
 import axios from 'axios';
 import ProductCard from '../components/ProductCard';
+import Meta from '../components/Meta';
 
 const API_URL = process.env.REACT_APP_API_URL || 'https://greencard-backend.onrender.com/api';
 
@@ -48,6 +49,7 @@ const AdminPanel = () => {
       borderRadius: 18,
       boxShadow: "0 4px 24px #22C55E11"
     }}>
+      <Meta title="GreenCart – Admin" />
       {isAdmin && (
         <div style={{ marginBottom: 24, textAlign: 'right' }}>
           <a

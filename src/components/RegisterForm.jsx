@@ -1,32 +1,15 @@
 import { useState } from 'react';
-import { auth } from '../services/api';
 
-const RegisterForm = ({ onRegister }) => {
+// Formulaire d'inscription simplifié. L'appel API est géré par le parent via onSubmit.
+const RegisterForm = ({ onSubmit, error = '' }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [role, setRole] = useState('consumer');
-  const [error, setError] = useState('');
 
-  const handleSubmit = async e => {
+  const handleSubmit = e => {
     e.preventDefault();
-    setError('');
-    try {
-      const res = await auth.register({ email, password, name, role });
-      if (res.data && res.data.user) {
-        onRegister && onRegister(res.data.user);
-      } else if (res.data && res.data.message) {
-        setError(res.data.message);
-      } else {
-        setError('Erreur lors de l’inscription');
-      }
-    } catch (err) {
-      if (err.response && err.response.data && err.response.data.error) {
-        setError(err.response.data.error);
-      } else {
-        setError('Erreur lors de l’inscription');
-      }
-    }
+    onSubmit && onSubmit({ email, password, name, role });
   };
 
   return (

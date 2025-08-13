@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import Meta from '../components/Meta';
 
 const API_URL = process.env.REACT_APP_API_URL || 'https://greencard-backend.onrender.com/api';
 
@@ -112,6 +113,7 @@ const Home = ({ user, onAddToCart }) => {
 
   return (
     <div style={{ background: "#F8FAFB" }}>
+      <Meta title="GreenCart – Accueil" />
       {/* Hero */}
       <section className="hero">
         <img src="/Images/logo.jpeg" alt="GreenCart" style={{ height: 200, marginBottom: 18, borderRadius: 24, background: "#F0FDF4" }} />
@@ -140,8 +142,6 @@ const Home = ({ user, onAddToCart }) => {
               gap: 10,
               cursor: "pointer"
             }}
-            onMouseOver={e => e.currentTarget.style.background = "linear-gradient(90deg, #16A34A 60%, #22C55E 100%)"}
-            onMouseOut={e => e.currentTarget.style.background = "linear-gradient(90deg, #22C55E 60%, #16A34A 100%)"}
           >
             <span style={{ fontSize: 22 }}>🛒</span>
             Acheter maintenant
@@ -165,16 +165,6 @@ const Home = ({ user, onAddToCart }) => {
               alignItems: "center",
               gap: 10,
               cursor: "pointer"
-            }}
-            onMouseOver={e => {
-              e.currentTarget.style.background = "#22C55E";
-              e.currentTarget.style.color = "#fff";
-              e.currentTarget.style.border = "2px solid #16A34A";
-            }}
-            onMouseOut={e => {
-              e.currentTarget.style.background = "#fff";
-              e.currentTarget.style.color = "#22C55E";
-              e.currentTarget.style.border = "2px solid #22C55E";
             }}
           >
             <span style={{ fontSize: 22 }}>📝</span>

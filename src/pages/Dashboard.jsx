@@ -3,6 +3,7 @@ import IAFormPredictGoodSale from './IAFormPredictGoodSale';
 import IAFormMeilleurProduit from './IAFormMeilleurProduit';
 import { orders } from '../services/api';
 import axios from 'axios';
+import Meta from '../components/Meta';
 
 const API_URL = process.env.REACT_APP_API_URL || 'https://greencard-backend.onrender.com/api';
 
@@ -210,6 +211,7 @@ const Dashboard = ({ user, setUser }) => {
       padding: window.innerWidth < 600 ? "1.2em 0.5em" : "2.5em 1.5em",
       width: "100%"
     }}>
+      <Meta title="GreenCart – Tableau de bord" />
       {/* Nom de l'utilisateur */}
       <div style={{
         textAlign: 'center',

@@ -1,210 +1,105 @@
-import React, { useState, useEffect } from 'react';
+import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import axios from 'axios';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-import Home from './pages/Home';
-import ProductList from './pages/ProductList';
-import Dashboard from './pages/Dashboard';
-import AdminPanel from './pages/AdminPanel';
-import Login from './pages/Login';
-import Register from './pages/Register';
 import Cart from './components/Cart';
-import Blog from './pages/Blog';
-import About from './pages/About';
-import Producers from './pages/Producers';
-import Impact from './pages/Impact';
-import Terms from './pages/Terms';
-import Privacy from './pages/Privacy';
-import Legal from './pages/Legal';
-import Cookies from './pages/Cookies';
-import Accessibilite from './pages/Accessibilite';
-import PlanDuSite from './pages/PlanDuSite';
-import Faq from './pages/Faq';
+import PrivateRoute from './components/PrivateRoute';
+import useUser from './hooks/useUser';
+import useCart from './hooks/useCart';
+import useDarkMode from './hooks/useDarkMode';
 
-const API_URL = process.env.REACT_APP_API_URL || 'https://greencard-backend.onrender.com/api';
+// Lazy loaded pages for code splitting
+const Home = lazy(() => import('./pages/Home'));
+const ProductList = lazy(() => import('./pages/ProductList'));
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const AdminPanel = lazy(() => import('./pages/AdminPanel'));
+const Login = lazy(() => import('./pages/Login'));
+const Register = lazy(() => import('./pages/Register'));
+const Blog = lazy(() => import('./pages/Blog'));
+const About = lazy(() => import('./pages/About'));
+const Producers = lazy(() => import('./pages/Producers'));
+const Impact = lazy(() => import('./pages/Impact'));
+const Terms = lazy(() => import('./pages/Terms'));
+const Privacy = lazy(() => import('./pages/Privacy'));
+const Legal = lazy(() => import('./pages/Legal'));
+const Cookies = lazy(() => import('./pages/Cookies'));
+const Accessibilite = lazy(() => import('./pages/Accessibilite'));
+const PlanDuSite = lazy(() => import('./pages/PlanDuSite'));
+const Faq = lazy(() => import('./pages/Faq'));
+const IAFormMeilleurProduit = lazy(() => import('./pages/IAFormMeilleurProduit'));
+const IAFormPredictGoodSale = lazy(() => import('./pages/IAFormPredictGoodSale'));
 
 function App() {
-  const [user, setUser] = useState(() => {
-    // Persistance utilisateur (optionnel)
-    const stored = localStorage.getItem('greencart_user');
-    return stored ? JSON.parse(stored) : null;
-  });
-  const [cart, setCart] = useState(() => {
-    const stored = localStorage.getItem('greencart_cart');
-    return stored ? JSON.parse(stored) : [];
-  });
-  const [darkMode, setDarkMode] = useState(() => {
-    return localStorage.getItem('greencart_darkmode') === 'true';
-  });
+  const { user, setUser, login, register, logout } = useUser();
+  const { cart, addToCart, removeFromCart, clearCart } = useCart();
+  const [darkMode, setDarkMode] = useDarkMode();
 
-  // Fonction utilitaire pour recharger le user depuis l'API
-  const fetchUserFromAPI = async (userObj) => {
-    if (!userObj) return null;
-    try {
-      const res = await axios.get(`${API_URL}/auth/users`);
-      const updated = res.data.find(u => u.id === userObj.id);
-      if (updated) {
-        setUser(updated);
-        localStorage.setItem('greencart_user', JSON.stringify(updated));
-        return updated;
-      }
-    } catch {
-      // ignore
-    }
-    return userObj;
-  };
-
-  // Recharge le user à jour au montage si présent dans le localStorage
-  useEffect(() => {
-    if (user && user.id) {
-      fetchUserFromAPI(user);
-    }
-    // eslint-disable-next-line
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem('greencart_cart', JSON.stringify(cart));
-  }, [cart]);
-
-  useEffect(() => {
-    if (user) {
-      localStorage.setItem('greencart_user', JSON.stringify(user));
-    } else {
-      localStorage.removeItem('greencart_user');
-    }
-  }, [user]);
-
-  useEffect(() => {
-    document.body.classList.toggle('dark', darkMode);
-    localStorage.setItem('greencart_darkmode', darkMode);
-  }, [darkMode]);
-
-  const handleLogin = async (u) => {
-    // Recharge le user à jour depuis l'API après login
-    const updated = await fetchUserFromAPI(u);
-    setUser(updated);
-  };
-  const handleRegister = async (u) => {
-    // Recharge le user à jour depuis l'API après inscription
-    const updated = await fetchUserFromAPI(u);
-    setUser(updated);
-  };
-  const handleLogout = () => {
-    setUser(null);
-    // Redirection vers l'accueil après déconnexion
-    window.location.href = '/';
-  };
-  const handleAddToCart = (product) => {
-    if (!product.id) return;
-    setCart(prev => {
-      const found = prev.find(item => item.id === product.id);
-      if (found) {
-        return prev.map(item =>
-          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
-        );
-      }
-      return [...prev, { ...product, quantity: 1 }];
-    });
-  };
-
-  const handleRemoveFromCart = (id) => {
-    setCart(prev => prev.filter(item => item.id !== id));
-  };
-
-  const handleClearCart = () => setCart([]);
+  const cartCount =
+    user && user.role === 'consumer'
+      ? cart.reduce((sum, i) => sum + i.quantity, 0)
+      : 0;
 
   return (
     <Router>
       <Navbar
         user={user}
-        onLogout={handleLogout}
-        cartCount={user && user.role === 'consumer' ? cart.reduce((sum, i) => sum + i.quantity, 0) : 0}
+        onLogout={logout}
+        cartCount={cartCount}
         darkMode={darkMode}
-        onToggleDarkMode={() => setDarkMode(dm => !dm)}
+        onToggleDarkMode={() => setDarkMode((dm) => !dm)}
       />
-      <Routes>
-        <Route path="/" element={
-          <Home
-            user={user}
-            onAddToCart={user && user.role === 'consumer' ? handleAddToCart : undefined}
+      <Suspense fallback={<div style={{ textAlign: 'center', marginTop: '2em' }}>Chargement…</div>}>
+        <Routes>
+          <Route
+            path="/"
+            element={<Home user={user} onAddToCart={user && user.role === 'consumer' ? addToCart : undefined} />}
           />
-        } />
-        <Route path="/products" element={
-          <ProductList
-            onAddToCart={user && user.role === 'consumer' ? handleAddToCart : undefined}
-            user={user}
+          <Route
+            path="/products"
+            element={<ProductList onAddToCart={user && user.role === 'consumer' ? addToCart : undefined} user={user} />}
           />
-        } />
-        <Route path="/dashboard" element={
-          user ? (
-            <Dashboard user={user} setUser={(u) => {
-              setUser(u);
-              if (u) {
-                localStorage.setItem('greencart_user', JSON.stringify(u));
-              } else {
-                localStorage.removeItem('greencart_user');
-              }
-            }} />
-          ) : (
-            <main style={{ textAlign: 'center', marginTop: '3em' }}>
-              <div style={{
-                display: 'inline-block',
-                background: '#fff',
-                borderRadius: 16,
-                boxShadow: '0 2px 8px #22C55E22',
-                padding: '2em 3em'
-              }}>
-                <h2 style={{ color: '#e11d48' }}>Accès refusé</h2>
-                <p>Vous devez être connecté pour accéder au tableau de bord.</p>
-              </div>
-            </main>
-          )
-        } />
-        <Route path="/admin" element={<AdminPanel />} />
-        <Route path="/login" element={<Login onLogin={handleLogin} />} />
-        <Route path="/register" element={<Register onRegister={handleRegister} />} />
-        <Route path="/cart" element={
-          user && user.role === 'consumer' ? (
-            <Cart
-              cart={cart}
-              onRemove={handleRemoveFromCart}
-              onClear={handleClearCart}
-              user={user}
-            />
-          ) : (
-            <main style={{ textAlign: 'center', marginTop: '3em' }}>
-              <div style={{
-                display: 'inline-block',
-                background: '#fff',
-                borderRadius: 16,
-                boxShadow: '0 2px 8px #22C55E22',
-                padding: '2em 3em'
-              }}>
-                <h2 style={{ color: '#e11d48' }}>Accès refusé</h2>
-                <p>Vous devez être connecté en tant que consommateur pour accéder au panier.</p>
-              </div>
-            </main>
-          )
-        } />
-        <Route path="/blog" element={<Blog />} />
-        <Route path="/apropos" element={<About />} />
-        <Route path="/producteurs" element={<Producers />} />
-        <Route path="/impact" element={<Impact />} />
-        <Route path="/conditions-generales" element={<Terms />} />
-        <Route path="/confidentialite" element={<Privacy />} />
-        <Route path="/mentions-legales" element={<Legal />} />
-        <Route path="/cookies" element={<Cookies />} />
-        <Route path="/accessibilite" element={<Accessibilite />} />
-        <Route path="/plan-du-site" element={<PlanDuSite />} />
-        <Route path="/faq" element={<Faq />} />
-      </Routes>
+          <Route
+            path="/dashboard"
+            element={
+              <PrivateRoute
+                user={user}
+                element={<Dashboard user={user} setUser={setUser} />}
+              />
+            }
+          />
+          <Route
+            path="/admin"
+            element={<PrivateRoute user={user} roles={['owner']} element={<AdminPanel />} />}
+          />
+          <Route path="/login" element={<Login onLogin={login} />} />
+          <Route path="/register" element={<Register onRegister={register} />} />
+          <Route
+            path="/cart"
+            element={
+              <PrivateRoute
+                user={user && user.role === 'consumer' ? user : null}
+                element={<Cart cart={cart} onRemove={removeFromCart} onClear={clearCart} user={user} />}
+              />
+            }
+          />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/apropos" element={<About />} />
+          <Route path="/producteurs" element={<Producers />} />
+          <Route path="/impact" element={<Impact />} />
+          <Route path="/conditions-generales" element={<Terms />} />
+          <Route path="/confidentialite" element={<Privacy />} />
+          <Route path="/mentions-legales" element={<Legal />} />
+          <Route path="/cookies" element={<Cookies />} />
+          <Route path="/accessibilite" element={<Accessibilite />} />
+          <Route path="/plan-du-site" element={<PlanDuSite />} />
+          <Route path="/faq" element={<Faq />} />
+          <Route path="/ia/meilleur-produit" element={<IAFormMeilleurProduit />} />
+          <Route path="/ia/prevision-ventes" element={<IAFormPredictGoodSale />} />
+        </Routes>
+      </Suspense>
       <Footer />
     </Router>
   );
 }
 
 export default App;
-
-
-

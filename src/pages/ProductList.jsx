@@ -1,15 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useState } from 'react';
 import ProductCard from '../components/ProductCard';
 import ProducerProductForm from '../components/ProducerProductForm';
+import useProducts from '../hooks/useProducts';
+import Meta from '../components/Meta';
 
-// Définir l'URL de base de l'API à partir des variables d'environnement
 const API_URL = process.env.REACT_APP_API_URL || 'https://greencard-backend.onrender.com/api';
 
 const ProductList = ({ onAddToCart, user }) => {
-  const [items, setItems] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const { items, loading, error } = useProducts();
   const [showForm, setShowForm] = useState(false);
   const [editProduct, setEditProduct] = useState(null);
 
@@ -21,42 +19,14 @@ const ProductList = ({ onAddToCart, user }) => {
     return dlcDate < new Date(today.getFullYear(), today.getMonth(), today.getDate());
   }
 
-  useEffect(() => {
-    // Modification de l'appel API pour inclure l'URL complète
-    axios.get(`${API_URL}/products`)
-      .then(res => {
-        if (user && user.role === 'producer') {
-          setItems(res.data.filter(p => p.producer_id === user.id));
-        } else {
-          setItems(res.data.filter(p => p.quantity > 0 && !isExpired(p)));
-        }
-      })
-      .catch(() => setError("Erreur lors du chargement des produits"))
-      .finally(() => setLoading(false));
-  }, [user]);
-
   const handleEdit = (product) => {
     setEditProduct(product);
     setShowForm(true);
   };
 
-  const handleFormClose = (refresh = false) => {
+  const handleFormClose = () => {
     setShowForm(false);
     setEditProduct(null);
-    if (refresh) {
-      setLoading(true);
-      // Modification de l'appel API pour inclure l'URL complète
-      axios.get(`${API_URL}/products`)
-        .then(res => {
-          if (user && user.role === 'producer') {
-            setItems(res.data.filter(p => p.producer_id === user.id));
-          } else {
-            setItems(res.data.filter(p => p.quantity > 0 && !isExpired(p)));
-          }
-        })
-        .catch(() => setError("Erreur lors du chargement des produits"))
-        .finally(() => setLoading(false));
-    }
   };
 
   if (loading) return <div style={{ textAlign: 'center', margin: '2em 0' }}>Chargement…</div>;
@@ -72,6 +42,7 @@ const ProductList = ({ onAddToCart, user }) => {
 
   return (
     <main>
+      <Meta title="GreenCart – Produits" />
       <h2 style={{ textAlign: 'center', marginBottom: 24 }}>
         {user && user.role === 'producer' ? "Mes produits" : "Nos produits"}
       </h2>

@@ -1,46 +1,14 @@
 import { useState } from 'react';
-import { auth } from '../services/api';
 
-const LoginForm = ({ onLogin }) => {
+// Formulaire de connexion simplifié. La logique d'authentification est
+// déléguée au hook useUser via la prop onSubmit.
+const LoginForm = ({ onSubmit, error = '' }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
 
-  const handleSubmit = async e => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setError('');
-    try {
-      const res = await auth.login({ email, password });
-      if (res.data && res.data.user && res.data.token) {
-        // Force la mise à jour du localStorage avec le token à chaque login
-        const userWithToken = { ...res.data.user, token: res.data.token };
-        localStorage.setItem('greencart_user', JSON.stringify(userWithToken));
-        // Ajoute le rôle dans localStorage pour affichage conditionnel admin
-        if (userWithToken.role) {
-          localStorage.setItem('role', userWithToken.role);
-        } else {
-          localStorage.removeItem('role');
-        }
-        // Nettoie tout ancien user sans token
-        if (!res.data.user.token && localStorage.getItem('greencart_user')) {
-          const oldUser = JSON.parse(localStorage.getItem('greencart_user'));
-          if (!oldUser.token) {
-            localStorage.setItem('greencart_user', JSON.stringify(userWithToken));
-          }
-        }
-        onLogin && onLogin(userWithToken);
-      } else if (res.data && res.data.message) {
-        setError(res.data.message);
-      } else {
-        setError('Identifiants invalides');
-      }
-    } catch (err) {
-      if (err.response && err.response.data && err.response.data.error) {
-        setError(err.response.data.error);
-      } else {
-        setError('Identifiants invalides');
-      }
-    }
+    onSubmit && onSubmit({ email, password });
   };
 
   return (

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import Meta from '../components/Meta';
 
 const API_URL = process.env.REACT_APP_API_URL || 'https://greencard-backend.onrender.com/api';
 
@@ -48,6 +49,7 @@ export default function IAFormPredictGoodSale() {
 
   return (
     <div style={{ marginBottom: 32 }}>
+      <Meta title="GreenCart – IA Prévision ventes" />
       <h4 style={{ color: '#16A34A', marginBottom: 12 }}>Prédire une bonne vente</h4>
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexWrap: 'wrap', gap: 16, alignItems: 'center' }}>
         <input

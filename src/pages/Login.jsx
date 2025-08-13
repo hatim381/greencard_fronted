@@ -1,41 +1,30 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import LoginForm from '../components/LoginForm';
+import Meta from '../components/Meta';
 
+// Page de connexion utilisant la logique fournie par le hook useUser
 const Login = ({ onLogin }) => {
-  const [user, setUser] = useState(null);
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogin = (u) => {
-    setUser(u);
-    onLogin && onLogin(u);
-    navigate('/'); // Redirection vers l'accueil
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (credentials) => {
     setError('');
-    setLoading(true);
     try {
-      // Appel API pour se connecter
-      // Si succès, appeler handleLogin
+      await onLogin(credentials);
+      navigate('/');
     } catch (err) {
-      let msg = "Identifiants incorrects.";
+      let msg = 'Identifiants incorrects.';
       if (err.response && err.response.data && (err.response.data.error || err.response.data.message)) {
         msg = err.response.data.error || err.response.data.message;
       }
       setError(msg);
-    } finally {
-      setLoading(false);
     }
   };
 
-  if (user) return null; // Optionnel : ou afficher un loader
-
   return (
     <main>
+      <Meta title="GreenCart – Connexion" />
       <h2 style={{ textAlign: 'center', marginTop: '2em' }}>Connexion</h2>
       <div style={{
         maxWidth: 400,
@@ -45,12 +34,7 @@ const Login = ({ onLogin }) => {
         boxShadow: '0 2px 8px #0001',
         padding: '2em'
       }}>
-        <LoginForm onLogin={handleLogin} />
-        {error && (
-          <div style={{ color: "#e11d48", marginBottom: 12 }}>
-            {error}
-          </div>
-        )}
+        <LoginForm onSubmit={handleSubmit} error={error} />
       </div>
     </main>
   );
