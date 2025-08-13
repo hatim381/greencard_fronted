@@ -12,7 +12,9 @@ const Footer = () => {
       const res = await fetch(`${API_URL}/newsletter/subscribe`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email })
+        body: JSON.stringify({ email }),
+        // Ne pas inclure de cookies sur le cross-origin
+        credentials: 'omit'
       });
       if (res.ok) {
         setMsg('Merci ! Vous êtes inscrit à la newsletter.');
