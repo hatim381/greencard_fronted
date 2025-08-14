@@ -183,26 +183,6 @@ const Home = ({ user, onAddToCart }) => {
         </div>
       </section>
 
-      {/* Stats */}
-      <section style={{ display: "flex", justifyContent: "center", gap: "4rem", margin: "2.5rem 0 2.5rem 0" }}>
-        <div style={{ textAlign: "center" }}>
-          <div style={{ color: "#22C55E", fontWeight: 700, fontSize: "2rem" }}>1,200+</div>
-          <div style={{ color: "#222", fontWeight: 500 }}>Producteurs locaux</div>
-        </div>
-        <div style={{ textAlign: "center" }}>
-          <div style={{ color: "#22C55E", fontWeight: 700, fontSize: "2rem" }}>85%</div>
-          <div style={{ color: "#222", fontWeight: 500 }}>Réduction du gaspillage</div>
-        </div>
-        <div style={{ textAlign: "center" }}>
-          <div style={{ color: "#22C55E", fontWeight: 700, fontSize: "2rem" }}>12,000+</div>
-          <div style={{ color: "#222", fontWeight: 500 }}>Clients satisfaits</div>
-        </div>
-        <div style={{ textAlign: "center" }}>
-          <div style={{ color: "#22C55E", fontWeight: 700, fontSize: "2rem" }}>45%</div>
-          <div style={{ color: "#222", fontWeight: 500 }}>Économie moyenne</div>
-        </div>
-      </section>
-
       {/* Catégories + produits populaires */}
       <section style={{ background: "#fff", borderRadius: 16, maxWidth: 1200, margin: "0 auto", padding: "2.5rem 2rem 2rem 2rem", marginBottom: "2.5rem" }}>
         <div style={{ textAlign: "center", color: "#22C55E", fontWeight: 600, fontSize: "0.95em", letterSpacing: 1, marginBottom: 4 }}>
