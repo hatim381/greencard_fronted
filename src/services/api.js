@@ -39,10 +39,10 @@ http.interceptors.request.use((config) => {
   return config;
 });
 
-// --- Auth ---
 export const auth = {
   register: (data) => http.post("/auth/register", data),
   login: (data) => http.post("/auth/login", data),
+  getUsers: () => http.get("/auth/users"), // 🔥 NEW
 };
 
 // --- Produits ---
