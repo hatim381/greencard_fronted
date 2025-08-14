@@ -1,19 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const API_URL = process.env.REACT_APP_API_URL || 'https://greencard-backend.onrender.com/api';
 
+const SkeletonCard = () => (
+  <div className="card skeleton">
+    <div className="skeleton-avatar" />
+    <div className="skeleton-line w-70" />
+    <div className="skeleton-line w-90" />
+    <div className="skeleton-line w-45" />
+  </div>
+);
+
 const ProducerCard = ({ producer }) => {
   const initial = producer?.name?.trim()?.charAt(0)?.toUpperCase() || '?';
+  const name = producer?.name || 'Producteur';
   const address = producer?.default_address || 'Adresse non renseignée';
 
   return (
-    <div className="card hstack" style={{ gap: 14 }}>
+    <div className="card producer-card">
       <div className="avatar">{initial}</div>
-      <div className="vstack" style={{ gap: 2, flex: 1, minWidth: 0 }}>
-        <div className="title">{producer?.name || 'Producteur'}</div>
-        <div className="line" title={address}>{address}</div>
-        <div className="email">{producer?.email}</div>
+
+      <div className="producer-content">
+        <div className="card-title">{name}</div>
+        <div className="card-sub" title={address}>
+          <span className="chip chip-soft">📍</span>
+          <span className="truncate">{address}</span>
+        </div>
+        <div className="card-email">
+          <span className="chip chip-soft">✉️</span>
+          {producer?.email || '—'}
+        </div>
       </div>
     </div>
   );
@@ -21,16 +39,16 @@ const ProducerCard = ({ producer }) => {
 
 const Home = () => {
   const [producers, setProducers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [loading, setLoading]   = useState(true);
+  const [error, setError]       = useState('');
 
   useEffect(() => {
     axios.get(`${API_URL}/auth/users`)
-      .then((res) => {
+      .then(res => {
         const list = Array.isArray(res.data)
           ? res.data.filter(u => (u.role || '').toLowerCase() === 'producer')
           : [];
-        list.sort((a,b) => (a.name||'').localeCompare(b.name||''));
+        list.sort((a,b) => (a.name || '').localeCompare(b.name || ''));
         setProducers(list);
       })
       .catch(() => setError("Erreur lors du chargement des producteurs"))
@@ -38,7 +56,7 @@ const Home = () => {
   }, []);
 
   return (
-    <div style={{ minHeight: '100vh' }}>
+    <main>
       {/* HERO */}
       <section className="hero">
         <div className="container">
@@ -46,6 +64,9 @@ const Home = () => {
           <p className="hero-sub">
             Découvrez les producteurs inscrits sur GreenCart et leurs invendus disponibles.
           </p>
+          <div className="cta-group">
+            <Link to="/products" className="btn btn-primary">Voir tous les produits</Link>
+          </div>
         </div>
       </section>
 
@@ -53,23 +74,19 @@ const Home = () => {
       <section className="section">
         <div className="container">
           <div className="producers-header">
-            <h2 style={{ fontSize: 22, fontWeight: 800, color: '#111827', margin: 0 }}>
-              Producteurs inscrits
-            </h2>
-            <div className="text-muted" style={{ fontWeight: 600 }}>
+            <h2 className="section-title">Producteurs inscrits</h2>
+            <div className="text-muted count">
               {loading ? '—' : `${producers.length} producteur${producers.length > 1 ? 's' : ''}`}
             </div>
           </div>
 
-          {loading && (
-            <div style={{ textAlign: 'center', color: '#059669', padding: '24px 0' }}>
-              Chargement…
-            </div>
+          {error && (
+            <div className="alert-error">😕 {error}</div>
           )}
 
-          {error && (
-            <div style={{ textAlign: 'center', color: '#DC2626', padding: '24px 0' }}>
-              {error}
+          {loading && (
+            <div className="producers-grid">
+              {Array.from({length: 6}).map((_,i) => <SkeletonCard key={i} />)}
             </div>
           )}
 
@@ -79,14 +96,12 @@ const Home = () => {
 
           {!loading && !error && producers.length > 0 && (
             <div className="producers-grid">
-              {producers.map((p) => (
-                <ProducerCard key={p.id} producer={p} />
-              ))}
+              {producers.map(p => <ProducerCard key={p.id} producer={p} />)}
             </div>
           )}
         </div>
       </section>
-    </div>
+    </main>
   );
 };
 
