@@ -13,29 +13,29 @@ const SkeletonCard = () => (
   </div>
 );
 
+// Remplace ce composant dans Home.jsx
 const ProducerCard = ({ producer }) => {
-  const initial = producer?.name?.trim()?.charAt(0)?.toUpperCase() || '?';
-  const name = producer?.name || 'Producteur';
-  const address = producer?.default_address || 'Adresse non renseignée';
+  const name =
+    producer?.name ? producer.name.charAt(0).toUpperCase() + producer.name.slice(1) : "Producteur";
+  const address = producer?.default_address?.trim() || "Adresse non renseignée";
 
   return (
-    <div className="card producer-card">
-      <div className="avatar">{initial}</div>
-
-      <div className="producer-content">
+    <div className="card producer-card" style={{ display: "flex", gap: 12, alignItems: "center" }}>
+      <div className="producer-content" style={{ minWidth: 0 }}>
         <div className="card-title">{name}</div>
-        <div className="card-sub" title={address}>
+        <div className="card-sub" title={address} style={{ display: "flex", gap: 8, alignItems: "center" }}>
           <span className="chip chip-soft">📍</span>
           <span className="truncate">{address}</span>
         </div>
-        <div className="card-email">
+        <div className="card-email" style={{ display: "flex", gap: 8, alignItems: "center" }}>
           <span className="chip chip-soft">✉️</span>
-          {producer?.email || '—'}
+          {producer?.email || "—"}
         </div>
       </div>
     </div>
   );
 };
+
 
 const Home = () => {
   const [producers, setProducers] = useState([]);
