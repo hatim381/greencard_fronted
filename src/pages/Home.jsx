@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 const API_URL = process.env.REACT_APP_API_URL || 'https://greencard-backend.onrender.com/api';
@@ -16,19 +15,11 @@ const ProducerCard = ({ producer }) => {
         <div className="line" title={address}>{address}</div>
         <div className="email">{producer?.email}</div>
       </div>
-      {/* Lien pour voir ses produits (facultatif) */}
-      <Link
-        to={`/products?producer_id=${producer?.id}`}
-        className="btn btn-outline"
-        style={{ whiteSpace:'nowrap' }}
-      >
-        Voir ses produits
-      </Link>
     </div>
   );
 };
 
-const Home = ({ user }) => {
+const Home = () => {
   const [producers, setProducers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -39,7 +30,6 @@ const Home = ({ user }) => {
         const list = Array.isArray(res.data)
           ? res.data.filter(u => (u.role || '').toLowerCase() === 'producer')
           : [];
-        // tri alpha pour un rendu propre
         list.sort((a,b) => (a.name||'').localeCompare(b.name||''));
         setProducers(list);
       })
@@ -52,18 +42,10 @@ const Home = ({ user }) => {
       {/* HERO */}
       <section className="hero">
         <div className="container">
-          <img src="/Images/logo.jpeg" alt="GreenCart" className="hero-logo" />
           <h1 className="hero-title">Nos producteurs partenaires</h1>
           <p className="hero-sub">
             Découvrez les producteurs inscrits sur GreenCart et leurs invendus disponibles.
           </p>
-
-          <div className="cta-group">
-            <Link to="/products" className="btn btn-primary">Voir les produits</Link>
-            {user?.role === 'producer' && (
-              <Link to="/products?add=1" className="btn btn-outline">Vendre mes invendus</Link>
-            )}
-          </div>
         </div>
       </section>
 

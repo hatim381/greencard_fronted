@@ -26,7 +26,6 @@ const API_URL = process.env.REACT_APP_API_URL || 'https://greencard-backend.onre
 
 function App() {
   const [user, setUser] = useState(() => {
-    // Persistance utilisateur (optionnel)
     const stored = localStorage.getItem('greencart_user');
     return stored ? JSON.parse(stored) : null;
   });
@@ -38,12 +37,11 @@ function App() {
     return localStorage.getItem('greencart_darkmode') === 'true';
   });
 
-  // Fonction utilitaire pour recharger le user depuis l'API
   const fetchUserFromAPI = async (userObj) => {
     if (!userObj) return null;
     try {
       const res = await axios.get(`${API_URL}/auth/users`);
-      const updated = res.data.find(u => u.id === userObj.id);
+      const updated = Array.isArray(res.data) ? res.data.find(u => u.id === userObj.id) : null;
       if (updated) {
         setUser(updated);
         localStorage.setItem('greencart_user', JSON.stringify(updated));
@@ -55,11 +53,8 @@ function App() {
     return userObj;
   };
 
-  // Recharge le user à jour au montage si présent dans le localStorage
   useEffect(() => {
-    if (user && user.id) {
-      fetchUserFromAPI(user);
-    }
+    if (user && user.id) { fetchUserFromAPI(user); }
     // eslint-disable-next-line
   }, []);
 
@@ -81,22 +76,20 @@ function App() {
   }, [darkMode]);
 
   const handleLogin = async (u) => {
-    // Recharge le user à jour depuis l'API après login
     const updated = await fetchUserFromAPI(u);
     setUser(updated);
   };
   const handleRegister = async (u) => {
-    // Recharge le user à jour depuis l'API après inscription
     const updated = await fetchUserFromAPI(u);
     setUser(updated);
   };
   const handleLogout = () => {
     setUser(null);
-    // Redirection vers l'accueil après déconnexion
     window.location.href = '/';
   };
+
   const handleAddToCart = (product) => {
-    if (!product.id) return;
+    if (!product?.id) return;
     setCart(prev => {
       const found = prev.find(item => item.id === product.id);
       if (found) {
@@ -107,11 +100,7 @@ function App() {
       return [...prev, { ...product, quantity: 1 }];
     });
   };
-
-  const handleRemoveFromCart = (id) => {
-    setCart(prev => prev.filter(item => item.id !== id));
-  };
-
+  const handleRemoveFromCart = (id) => setCart(prev => prev.filter(item => item.id !== id));
   const handleClearCart = () => setCart([]);
 
   return (
@@ -124,69 +113,81 @@ function App() {
         onToggleDarkMode={() => setDarkMode(dm => !dm)}
       />
       <Routes>
-        <Route path="/" element={
-          <Home
-            user={user}
-            onAddToCart={user && user.role === 'consumer' ? handleAddToCart : undefined}
-          />
-        } />
-        <Route path="/products" element={
-          <ProductList
-            onAddToCart={user && user.role === 'consumer' ? handleAddToCart : undefined}
-            user={user}
-          />
-        } />
-        <Route path="/dashboard" element={
-          user ? (
-            <Dashboard user={user} setUser={(u) => {
-              setUser(u);
-              if (u) {
-                localStorage.setItem('greencart_user', JSON.stringify(u));
-              } else {
-                localStorage.removeItem('greencart_user');
-              }
-            }} />
-          ) : (
-            <main style={{ textAlign: 'center', marginTop: '3em' }}>
-              <div style={{
-                display: 'inline-block',
-                background: '#fff',
-                borderRadius: 16,
-                boxShadow: '0 2px 8px #22C55E22',
-                padding: '2em 3em'
-              }}>
-                <h2 style={{ color: '#e11d48' }}>Accès refusé</h2>
-                <p>Vous devez être connecté pour accéder au tableau de bord.</p>
-              </div>
-            </main>
-          )
-        } />
+        <Route
+          path="/"
+          element={
+            <Home
+              user={user}
+              onAddToCart={user && user.role === 'consumer' ? handleAddToCart : undefined}
+            />
+          }
+        />
+        <Route
+          path="/products"
+          element={
+            <ProductList
+              onAddToCart={user && user.role === 'consumer' ? handleAddToCart : undefined}
+              user={user}
+            />
+          }
+        />
+        <Route
+          path="/dashboard"
+          element={
+            user ? (
+              <Dashboard
+                user={user}
+                setUser={(u) => {
+                  setUser(u);
+                  if (u) localStorage.setItem('greencart_user', JSON.stringify(u));
+                  else localStorage.removeItem('greencart_user');
+                }}
+              />
+            ) : (
+              <main style={{ textAlign: 'center', marginTop: '3em' }}>
+                <div style={{
+                  display: 'inline-block',
+                  background: '#fff',
+                  borderRadius: 16,
+                  boxShadow: '0 2px 8px #22C55E22',
+                  padding: '2em 3em'
+                }}>
+                  <h2 style={{ color: '#e11d48' }}>Accès refusé</h2>
+                  <p>Vous devez être connecté pour accéder au tableau de bord.</p>
+                </div>
+              </main>
+            )
+          }
+        />
         <Route path="/admin" element={<AdminPanel />} />
         <Route path="/login" element={<Login onLogin={handleLogin} />} />
         <Route path="/register" element={<Register onRegister={handleRegister} />} />
-        <Route path="/cart" element={
-          user && user.role === 'consumer' ? (
-            <Cart
-              cart={cart}
-              onRemove={handleRemoveFromCart}
-              onClear={handleClearCart}
-              user={user}
-            />
-          ) : (
-            <main style={{ textAlign: 'center', marginTop: '3em' }}>
-              <div style={{
-                display: 'inline-block',
-                background: '#fff',
-                borderRadius: 16,
-                boxShadow: '0 2px 8px #22C55E22',
-                padding: '2em 3em'
-              }}>
-                <h2 style={{ color: '#e11d48' }}>Accès refusé</h2>
-                <p>Vous devez être connecté en tant que consommateur pour accéder au panier.</p>
-              </div>
-            </main>
-          )
-        } />
+        <Route
+          path="/cart"
+          element={
+            user && user.role === 'consumer' ? (
+              <Cart
+                cart={cart}
+                onRemove={handleRemoveFromCart}
+                onClear={handleClearCart}
+                user={user}
+              />
+            ) : (
+              <main style={{ textAlign: 'center', marginTop: '3em' }}>
+                <div style={{
+                  display: 'inline-block',
+                  background: '#fff',
+                  borderRadius: 16,
+                  boxShadow: '0 2px 8px #22C55E22',
+                  padding: '2em 3em'
+                }}>
+                  <h2 style={{ color: '#e11d48' }}>Accès refusé</h2>
+                  <p>Vous devez être connecté en tant que consommateur pour accéder au panier.</p>
+                </div>
+              </main>
+            )
+          }
+        />
         <Route path="/blog" element={<Blog />} />
         <Route path="/apropos" element={<About />} />
         <Route path="/producteurs" element={<Producers />} />
@@ -205,6 +206,3 @@ function App() {
 }
 
 export default App;
-
-
-
