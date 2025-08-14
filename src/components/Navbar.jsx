@@ -57,6 +57,17 @@ const Navbar = ({ cartCount, user, onLogout, darkMode, onToggleDarkMode }) => {
           50% { transform: scale(1.05); }
         }
 
+        @keyframes slideDown {
+          from { 
+            transform: translateY(-20px); 
+            opacity: 0; 
+          }
+          to { 
+            transform: translateY(0); 
+            opacity: 1; 
+          }
+        }
+
         .nav-link:hover {
           background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(22, 163, 74, 0.1) 100%) !important;
           color: #16A34A !important;
@@ -75,72 +86,190 @@ const Navbar = ({ cartCount, user, onLogout, darkMode, onToggleDarkMode }) => {
           animation: pulse 1s infinite;
         }
 
+        /* Desktop - design original préservé */
         .mobile-menu-btn {
           display: none;
         }
 
-        .nav-backdrop {
-          background: rgba(255, 255, 255, 0.95);
-          backdrop-filter: blur(20px);
-          border-bottom: 1px solid rgba(34, 197, 94, 0.1);
+        .nav-links {
+          display: flex;
         }
 
+        .nav-actions {
+          display: flex;
+        }
+
+        /* Tablette - adaptation légère */
+        @media (max-width: 1024px) and (min-width: 769px) {
+          .nav-links {
+            gap: 4px !important;
+          }
+          
+          .nav-link {
+            padding: 10px 16px !important;
+            font-size: 0.9rem !important;
+          }
+          
+          .logo-text {
+            display: none !important;
+          }
+          
+          .nav-actions {
+            gap: 8px !important;
+          }
+        }
+
+        /* Mobile - menu hamburger intelligent */
         @media (max-width: 768px) {
           .mobile-menu-btn {
-            display: flex;
+            display: flex !important;
+            z-index: 1001;
           }
           
           .nav-links {
-            display: none;
+            display: none !important;
+            position: fixed;
+            top: 80px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 40px 20px;
+            gap: 20px;
+            z-index: 1000;
+            animation: slideDown 0.3s ease-out;
           }
           
           .nav-links.open {
-            display: flex;
-            flex-direction: column;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(20px);
-            padding: 20px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-            animation: slideIn 0.3s ease-out;
+            display: flex !important;
           }
+          
+          .nav-link {
+            width: 100%;
+            max-width: 280px;
+            text-align: center;
+            padding: 16px 24px !important;
+            font-size: 1.1rem !important;
+            border-radius: 15px !important;
+            background: rgba(34, 197, 94, 0.05) !important;
+            border: 1px solid rgba(34, 197, 94, 0.2);
+          }
+          
+          .nav-actions {
+            gap: 8px !important;
+          }
+          
+          .action-btn {
+            width: 44px !important;
+            height: 44px !important;
+          }
+          
+          .logout-btn, .login-btn {
+            padding: 10px 20px !important;
+            font-size: 0.85rem !important;
+            height: 44px !important;
+          }
+          
+          .logo-container {
+            padding: 8px !important;
+            gap: 8px !important;
+          }
+          
+          .logo-img {
+            height: 35px !important;
+          }
+          
+          .logo-text {
+            font-size: 1.1rem !important;
+          }
+        }
+
+        /* Très petit mobile */
+        @media (max-width: 480px) {
+          .nav-container {
+            padding: 12px 16px !important;
+          }
+          
+          .logo-text {
+            display: none !important;
+          }
+          
+          .nav-actions {
+            gap: 6px !important;
+          }
+          
+          .action-btn {
+            width: 40px !important;
+            height: 40px !important;
+          }
+          
+          .logout-btn, .login-btn {
+            padding: 8px 16px !important;
+            font-size: 0.8rem !important;
+            height: 40px !important;
+          }
+        }
+
+        /* Overlay pour fermer le menu mobile */
+        .mobile-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(0, 0, 0, 0.3);
+          z-index: 999;
+          opacity: 0;
+          animation: fadeIn 0.3s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+          to { opacity: 1; }
         }
       `}</style>
 
-      <nav style={{
-        background: darkMode 
-          ? "linear-gradient(135deg, #1E293B 0%, #0F172A 100%)"
-          : "rgba(255, 255, 255, 0.95)",
-        backdropFilter: "blur(20px)",
-        padding: "16px 32px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        boxShadow: "0 8px 32px rgba(0, 0, 0, 0.08)",
-        borderBottom: "1px solid rgba(34, 197, 94, 0.1)",
-        position: "sticky",
-        top: 0,
-        zIndex: 1000,
-        minHeight: "80px",
-        animation: "slideIn 0.6s ease-out"
-      }}>
+      <nav 
+        className="nav-container"
+        style={{
+          background: darkMode 
+            ? "linear-gradient(135deg, #1E293B 0%, #0F172A 100%)"
+            : "rgba(255, 255, 255, 0.95)",
+          backdropFilter: "blur(20px)",
+          padding: "16px 32px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          boxShadow: "0 8px 32px rgba(0, 0, 0, 0.08)",
+          borderBottom: "1px solid rgba(34, 197, 94, 0.1)",
+          position: "sticky",
+          top: 0,
+          zIndex: 1000,
+          minHeight: "80px",
+          animation: "slideIn 0.6s ease-out"
+        }}
+      >
         {/* Logo Section */}
         <div style={{ display: "flex", alignItems: "center" }}>
           <Link to="/" style={{ display: "flex", alignItems: "center", textDecoration: "none" }}>
-            <div style={{
-              background: "linear-gradient(135deg, #22C55E 0%, #16A34A 100%)",
-              borderRadius: "20px",
-              padding: "12px",
-              boxShadow: "0 8px 30px rgba(34, 197, 94, 0.3)",
-              transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-              display: "flex",
-              alignItems: "center",
-              gap: "12px"
-            }}>
+            <div 
+              className="logo-container"
+              style={{
+                background: "linear-gradient(135deg, #22C55E 0%, #16A34A 100%)",
+                borderRadius: "20px",
+                padding: "12px",
+                boxShadow: "0 8px 30px rgba(34, 197, 94, 0.3)",
+                transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                display: "flex",
+                alignItems: "center",
+                gap: "12px"
+              }}
+            >
               <img
+                className="logo-img"
                 src="/Images/logo.jpeg"
                 alt="GreenCart"
                 style={{
@@ -151,17 +280,28 @@ const Navbar = ({ cartCount, user, onLogout, darkMode, onToggleDarkMode }) => {
                 onMouseEnter={(e) => e.target.style.transform = "rotate(5deg) scale(1.1)"}
                 onMouseLeave={(e) => e.target.style.transform = "rotate(0deg) scale(1)"}
               />
-              <span style={{
-                color: "white",
-                fontWeight: 800,
-                fontSize: "1.3rem",
-                letterSpacing: "-0.5px"
-              }}>
+              <span 
+                className="logo-text"
+                style={{
+                  color: "white",
+                  fontWeight: 800,
+                  fontSize: "1.3rem",
+                  letterSpacing: "-0.5px"
+                }}
+              >
                 GreenCart
               </span>
             </div>
           </Link>
         </div>
+
+        {/* Overlay mobile pour fermer le menu */}
+        {menuOpen && (
+          <div 
+            className="mobile-overlay"
+            onClick={() => setMenuOpen(false)}
+          />
+        )}
 
         {/* Bouton menu mobile */}
         <button
@@ -277,7 +417,7 @@ const Navbar = ({ cartCount, user, onLogout, darkMode, onToggleDarkMode }) => {
           {/* Connexion/Déconnexion */}
           {user ? (
             <button
-              className="action-btn"
+              className="action-btn logout-btn"
               onClick={() => {
                 onLogout();
                 window.location.href = '/';
@@ -311,6 +451,7 @@ const Navbar = ({ cartCount, user, onLogout, darkMode, onToggleDarkMode }) => {
           ) : (
             <Link
               to="/login"
+              className="login-btn"
               style={{
                 background: "linear-gradient(135deg, #22C55E 0%, #16A34A 100%)",
                 color: "#fff",
