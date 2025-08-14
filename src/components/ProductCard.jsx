@@ -3,13 +3,11 @@ import React from 'react';
 const API_URL = process.env.REACT_APP_API_URL || 'https://greencard-backend.onrender.com/api';
 
 const ProductCard = ({ product, onAddToCart, onEdit }) => {
-  // Supporte tous les noms de champ possibles
-  let imageUrl = product.image_url || product.imageUrl || product.image;
-  // Si l'URL est relative et commence par /uploads, la rendre absolue
-  if (imageUrl && !imageUrl.startsWith('http') && imageUrl.startsWith('/uploads')) {
+  // Détermine l'URL de l'image à afficher
+  let imageUrl = product.image_url || product.image;
+  if (imageUrl && !imageUrl.startsWith('http') && imageUrl.startsWith('/uploads/')) {
     imageUrl = `${API_URL.replace('/api', '')}${imageUrl}`;
   }
-  // Fallback si pas d'image
   if (!imageUrl) {
     imageUrl = "/placeholder.jpg";
   }
@@ -30,7 +28,6 @@ const ProductCard = ({ product, onAddToCart, onEdit }) => {
           src={imageUrl}
           alt={product.name}
           style={{ width: "100%", height: 140, objectFit: "cover", background: "#f3f3f3" }}
-          onError={e => { e.target.onerror = null; e.target.src = "/placeholder.jpg"; }}
         />
         {(product.co2 || product.co2_reduction) && (
           <span style={{

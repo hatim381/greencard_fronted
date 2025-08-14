@@ -9,7 +9,6 @@ export const API_URL =
 // Instance Axios dédiée à l'API
 const http = axios.create({
   baseURL: API_URL,
-  headers: { "Content-Type": "application/json" },
   // Empêche l'envoi automatique des cookies sur les requêtes cross-origin
   withCredentials: false,
   // timeout: 15000,
@@ -17,6 +16,7 @@ const http = axios.create({
 
 // Ajoute automatiquement le token d'authentification à chaque requête
 http.interceptors.request.use((config) => {
+  // Injecte le token si présent
   const stored = localStorage.getItem("greencart_user");
   if (stored) {
     try {
@@ -26,9 +26,16 @@ http.interceptors.request.use((config) => {
         config.headers.Authorization = `Bearer ${token}`;
       }
     } catch {
-      // ignore JSON parse errors and continue without token
+      // ignore JSON parse errors et continue sans token
     }
   }
+
+  // IMPORTANT : si on envoie un FormData, on supprime tout header Content-Type
+  // pour laisser Axios définir le bon "multipart/form-data; boundary=..."
+  if (config.data instanceof FormData && config.headers) {
+    delete config.headers["Content-Type"];
+  }
+
   return config;
 });
 
@@ -41,8 +48,9 @@ export const auth = {
 // --- Produits ---
 export const products = {
   getAll: () => http.get("/products/"),
-  add: (data) => http.post("/products/", data),
-  update: (id, data) => http.put(`/products/${id}`, data),
+  // On accepte une config optionnelle pour pouvoir passer des headers (ex: multipart/form-data)
+  add: (data, config = {}) => http.post("/products/", data, config),
+  update: (id, data, config = {}) => http.put(`/products/${id}`, data, config),
 };
 
 // --- Commandes ---
