@@ -4,63 +4,26 @@ import axios from 'axios';
 
 const API_URL = process.env.REACT_APP_API_URL || 'https://greencard-backend.onrender.com/api';
 
-// Carte producteur (simple et clean)
 const ProducerCard = ({ producer }) => {
   const initial = producer?.name?.trim()?.charAt(0)?.toUpperCase() || '?';
   const address = producer?.default_address || 'Adresse non renseignée';
 
   return (
-    <div
-      style={{
-        background: '#fff',
-        border: '1px solid #E5E7EB',
-        borderRadius: 12,
-        boxShadow: '0 2px 8px #0001',
-        padding: 16,
-        display: 'flex',
-        gap: 14,
-        alignItems: 'center',
-      }}
-    >
-      <div
-        style={{
-          width: 56,
-          height: 56,
-          borderRadius: '50%',
-          background: '#ECFDF5',
-          color: '#059669',
-          fontWeight: 800,
-          display: 'grid',
-          placeItems: 'center',
-          fontSize: 22,
-          flexShrink: 0,
-          border: '1px solid #D1FAE5',
-        }}
+    <div className="card hstack" style={{ gap: 14 }}>
+      <div className="avatar">{initial}</div>
+      <div className="vstack" style={{ gap: 2, flex: 1, minWidth: 0 }}>
+        <div className="title">{producer?.name || 'Producteur'}</div>
+        <div className="line" title={address}>{address}</div>
+        <div className="email">{producer?.email}</div>
+      </div>
+      {/* Lien pour voir ses produits (facultatif) */}
+      <Link
+        to={`/products?producer_id=${producer?.id}`}
+        className="btn btn-outline"
+        style={{ whiteSpace:'nowrap' }}
       >
-        {initial}
-      </div>
-
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontWeight: 800, fontSize: 16, color: '#111827' }}>
-          {producer?.name || 'Producteur'}
-        </div>
-        <div
-          style={{
-            fontSize: 13.5,
-            color: '#374151',
-            marginTop: 2,
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-          }}
-          title={address}
-        >
-          {address}
-        </div>
-        <div style={{ fontSize: 13, color: '#6B7280', marginTop: 6 }}>
-          {producer?.email}
-        </div>
-      </div>
+        Voir ses produits
+      </Link>
     </div>
   );
 };
@@ -71,12 +34,13 @@ const Home = ({ user }) => {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    axios
-      .get(`${API_URL}/auth/users`)
+    axios.get(`${API_URL}/auth/users`)
       .then((res) => {
         const list = Array.isArray(res.data)
-          ? res.data.filter((u) => (u.role || '').toLowerCase() === 'producer')
+          ? res.data.filter(u => (u.role || '').toLowerCase() === 'producer')
           : [];
+        // tri alpha pour un rendu propre
+        list.sort((a,b) => (a.name||'').localeCompare(b.name||''));
         setProducers(list);
       })
       .catch(() => setError("Erreur lors du chargement des producteurs"))
@@ -84,7 +48,7 @@ const Home = ({ user }) => {
   }, []);
 
   return (
-    <div style={{ minHeight: '100vh', background: '#F8FAFC' }}>
+    <div style={{ minHeight: '100vh' }}>
       {/* HERO */}
       <section className="hero">
         <div className="container">
@@ -95,9 +59,9 @@ const Home = ({ user }) => {
           </p>
 
           <div className="cta-group">
-            <Link to="/products" className="btn-green">Voir les produits</Link>
+            <Link to="/products" className="btn btn-primary">Voir les produits</Link>
             {user?.role === 'producer' && (
-              <Link to="/products?add=1" className="btn-outline-green">Vendre mes invendus</Link>
+              <Link to="/products?add=1" className="btn btn-outline">Vendre mes invendus</Link>
             )}
           </div>
         </div>
@@ -106,15 +70,7 @@ const Home = ({ user }) => {
       {/* LISTE DES PRODUCTEURS */}
       <section className="section">
         <div className="container">
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'baseline',
-              gap: 12,
-              marginBottom: 12,
-            }}
-          >
+          <div className="producers-header">
             <h2 style={{ fontSize: 22, fontWeight: 800, color: '#111827', margin: 0 }}>
               Producteurs inscrits
             </h2>
@@ -136,18 +92,7 @@ const Home = ({ user }) => {
           )}
 
           {!loading && !error && producers.length === 0 && (
-            <div
-              style={{
-                textAlign: 'center',
-                color: '#374151',
-                background: '#fff',
-                border: '1px dashed #CBD5E1',
-                padding: 22,
-                borderRadius: 12,
-              }}
-            >
-              Aucun producteur n’est inscrit pour le moment.
-            </div>
+            <div className="empty">Aucun producteur n’est inscrit pour le moment.</div>
           )}
 
           {!loading && !error && producers.length > 0 && (
