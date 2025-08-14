@@ -14,6 +14,7 @@ const http = axios.create({
   // timeout: 15000,
 });
 
+// commentaire
 // Ajoute automatiquement le token d'authentification à chaque requête
 http.interceptors.request.use((config) => {
   // Injecte le token si présent
