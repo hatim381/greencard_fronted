@@ -316,7 +316,7 @@ const Home = ({ user, onAddToCart }) => {
 
       {/* Mission */}
       <section style={{ display: "flex", gap: "3rem", alignItems: "center", background: "#fff", borderRadius: 16, maxWidth: 1200, margin: "0 auto", padding: "2.5rem 2rem", marginBottom: "2.5rem" }}>
-        <img src="/img/mission.jpg" alt="Producteur" style={{ width: 320, height: 380, objectFit: "cover", borderRadius: 14, boxShadow: "0 2px 8px #0001" }} />
+        <img src="/Images/prod3.png" alt="Producteur" style={{ width: 320, height: 380, objectFit: "cover", borderRadius: 14, boxShadow: "0 2px 8px #0001" }} />
         <div>
           <h2 style={{ marginTop: 0 }}>Notre mission</h2>
           <div style={{ color: "#444", fontSize: "1.08em", marginBottom: 18 }}>
