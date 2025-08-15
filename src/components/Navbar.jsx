@@ -213,30 +213,57 @@ const Navbar = ({ cartCount, user, onLogout, darkMode, onToggleDarkMode }) => {
         {/* Version Mobile */}
         {isMobile ? (
           <>
-            {/* Header mobile épuré - Juste le logo centré */}
-            <Link to="/" style={{ 
-              display: "flex", 
-              alignItems: "center", 
-              textDecoration: "none",
-              margin: "0 auto"
-            }}>
-              <img
-                src="/Images/logo.jpeg"
-                alt="GreenCart"
+            {/* Header mobile avec hamburger et logo */}
+            <div style={{ display: "flex", alignItems: "center", width: "100%" }}>
+              {/* Menu hamburger à gauche */}
+              <button
+                onClick={() => setMenuOpen(!menuOpen)}
                 style={{
-                  height: 35,
-                  borderRadius: "8px",
-                  marginRight: "8px"
+                  background: "transparent",
+                  border: "none",
+                  width: "40px",
+                  height: "40px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  cursor: "pointer",
+                  color: "#22C55E"
                 }}
-              />
-              <span style={{
-                color: "#22C55E",
-                fontWeight: 700,
-                fontSize: "1.1rem"
+                aria-label="Menu"
+              >
+                <span style={{ fontSize: "24px" }}>
+                  {menuOpen ? "✕" : "☰"}
+                </span>
+              </button>
+
+              {/* Logo centré */}
+              <Link to="/" style={{ 
+                display: "flex", 
+                alignItems: "center", 
+                textDecoration: "none",
+                margin: "0 auto"
               }}>
-                GreenCart
-              </span>
-            </Link>
+                <img
+                  src="/Images/logo.jpeg"
+                  alt="GreenCart"
+                  style={{
+                    height: 35,
+                    borderRadius: "8px",
+                    marginRight: "8px"
+                  }}
+                />
+                <span style={{
+                  color: "#22C55E",
+                  fontWeight: 700,
+                  fontSize: "1.1rem"
+                }}>
+                  GreenCart
+                </span>
+              </Link>
+
+              {/* Espace vide à droite pour équilibrer */}
+              <div style={{ width: "40px" }}></div>
+            </div>
 
             {/* Menu mobile overlay */}
             <div 
@@ -666,6 +693,7 @@ const Navbar = ({ cartCount, user, onLogout, darkMode, onToggleDarkMode }) => {
       {/* Bottom Navigation Mobile */}
       {isMobile && (
         <div className="mobile-bottom-nav show">
+          {/* Accueil */}
           <Link 
             to="/" 
             className={`bottom-nav-item${location.pathname === '/' ? ' active' : ''}`}
@@ -674,6 +702,7 @@ const Navbar = ({ cartCount, user, onLogout, darkMode, onToggleDarkMode }) => {
             <span style={{ fontSize: "11px", fontWeight: 500 }}>Accueil</span>
           </Link>
 
+          {/* Produits */}
           <Link 
             to="/products" 
             className={`bottom-nav-item${location.pathname === '/products' ? ' active' : ''}`}
@@ -719,27 +748,36 @@ const Navbar = ({ cartCount, user, onLogout, darkMode, onToggleDarkMode }) => {
             className={`bottom-nav-item${location.pathname === '/dashboard' ? ' active' : ''}`}
           >
             <span style={{ fontSize: "20px", marginBottom: "4px" }}>👤</span>
-            <span style={{ fontSize: "11px", fontWeight: 500 }}>
-              {user ? 'Profil' : 'Compte'}
-            </span>
+            <span style={{ fontSize: "11px", fontWeight: 500 }}>Profil</span>
           </Link>
 
-          {/* Menu */}
-          <button 
-            onClick={() => setMenuOpen(!menuOpen)}
-            className="bottom-nav-item"
-            style={{ 
-              background: "transparent", 
-              border: "none", 
-              cursor: "pointer",
-              color: menuOpen ? "#22C55E" : "#6B7280"
-            }}
-          >
-            <span style={{ fontSize: "20px", marginBottom: "4px" }}>
-              {menuOpen ? "✕" : "☰"}
-            </span>
-            <span style={{ fontSize: "11px", fontWeight: 500 }}>Menu</span>
-          </button>
+          {/* Connexion/Déconnexion */}
+          {user ? (
+            <button 
+              onClick={() => {
+                onLogout();
+                window.location.href = '/';
+              }}
+              className="bottom-nav-item"
+              style={{ 
+                background: "transparent", 
+                border: "none", 
+                cursor: "pointer",
+                color: "#EF4444"
+              }}
+            >
+              <span style={{ fontSize: "20px", marginBottom: "4px" }}>🚪</span>
+              <span style={{ fontSize: "11px", fontWeight: 500 }}>Sortir</span>
+            </button>
+          ) : (
+            <Link 
+              to="/login" 
+              className={`bottom-nav-item${location.pathname === '/login' ? ' active' : ''}`}
+            >
+              <span style={{ fontSize: "20px", marginBottom: "4px" }}>🔑</span>
+              <span style={{ fontSize: "11px", fontWeight: 500 }}>Connexion</span>
+            </Link>
+          )}
         </div>
       )}
     </>
