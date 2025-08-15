@@ -1,10 +1,12 @@
 import { useState } from 'react';
+import useDeviceDetection from '../hooks/useDeviceDetection';
 
 const API_URL = process.env.REACT_APP_API_URL || 'https://greencard-backend.onrender.com/api';
 
 const Footer = () => {
   const [email, setEmail] = useState('');
   const [msg, setMsg] = useState('');
+  const { isMobile } = useDeviceDetection();
 
   const handleSubscribe = async (e) => {
     e.preventDefault();
@@ -34,29 +36,39 @@ const Footer = () => {
       <div style={{
         background: "#22C55E",
         color: "#fff",
-        padding: "2.5rem 0 2rem 0",
-        borderTopLeftRadius: 32,
-        borderTopRightRadius: 32,
+        padding: isMobile ? "2rem 0 1.5rem 0" : "2.5rem 0 2rem 0",
+        borderTopLeftRadius: isMobile ? 20 : 32,
+        borderTopRightRadius: isMobile ? 20 : 32,
         textAlign: "left"
       }}>
         <div style={{
           maxWidth: 1200,
           margin: "0 auto",
-          padding: "0 2rem",
+          padding: isMobile ? "0 1rem" : "0 2rem",
           display: "flex",
           flexDirection: "column",
-          gap: 10
+          gap: isMobile ? 8 : 10
         }}>
-          <div style={{ fontWeight: 700, fontSize: "1.5rem", marginBottom: 6 }}>Restez informé</div>
-          <div style={{ fontSize: "1.08rem", marginBottom: 18 }}>
+          <div style={{ 
+            fontWeight: 700, 
+            fontSize: isMobile ? "1.3rem" : "1.5rem", 
+            marginBottom: isMobile ? 4 : 6 
+          }}>
+            Restez informé
+          </div>
+          <div style={{ 
+            fontSize: isMobile ? "1rem" : "1.08rem", 
+            marginBottom: isMobile ? 15 : 18 
+          }}>
             Abonnez-vous à notre newsletter pour recevoir nos offres spéciales et des conseils anti-gaspillage.
           </div>
           <form
             onSubmit={handleSubscribe}
             style={{
               display: "flex",
-              alignItems: "center",
-              gap: 12,
+              flexDirection: isMobile ? "column" : "row",
+              alignItems: isMobile ? "stretch" : "center",
+              gap: isMobile ? 10 : 12,
               maxWidth: 600,
               marginBottom: 8
             }}
@@ -69,13 +81,13 @@ const Footer = () => {
               required
               style={{
                 border: "none",
-                padding: "0.9em 1em",
-                fontSize: "1.08em",
+                padding: isMobile ? "1rem 1em" : "0.9em 1em",
+                fontSize: isMobile ? "1rem" : "1.08em",
                 outline: "none",
                 background: "#fff",
                 borderRadius: 8,
                 color: "#222",
-                flex: 1
+                flex: isMobile ? "none" : 1
               }}
             />
             <button
@@ -87,8 +99,8 @@ const Footer = () => {
                 background: "#fff",
                 border: "none",
                 borderRadius: 8,
-                padding: "0.9em 1.7em",
-                fontSize: "1.08em",
+                padding: isMobile ? "1rem 1.7em" : "0.9em 1.7em",
+                fontSize: isMobile ? "1rem" : "1.08em",
                 letterSpacing: 0.5,
                 cursor: "pointer"
               }}
@@ -117,12 +129,106 @@ const Footer = () => {
           )}
         </div>
       </div>
-      {/* Main footer */}
-      <div style={{
-        background: "#181F2A",
-        color: "#fff",
-        padding: "2.5rem 0 1.5rem 0"
-      }}>
+
+      {/* Main footer - Version conditionnelle mobile/desktop */}
+      {isMobile ? (
+        /* Footer mobile simplifié */
+        <div style={{
+          background: "#181F2A",
+          color: "#fff",
+          padding: "2rem 0 6rem 0", // Extra padding pour la bottom nav
+          textAlign: "center"
+        }}>
+          <div style={{
+            maxWidth: 600,
+            margin: "0 auto",
+            padding: "0 1rem"
+          }}>
+            {/* Logo et description */}
+            <div style={{ marginBottom: "1.5rem" }}>
+              <div style={{ 
+                fontWeight: 700, 
+                fontSize: "1.2rem",
+                marginBottom: 8, 
+                letterSpacing: 1,
+                color: "#22C55E"
+              }}>
+                GREENCART
+              </div>
+              <div style={{ 
+                color: "#d1fae5", 
+                fontSize: "0.9rem", 
+                lineHeight: 1.5 
+              }}>
+                La plateforme qui connecte consommateurs et producteurs locaux pour une alimentation durable.
+              </div>
+            </div>
+
+            {/* Contact essentiel */}
+            <div style={{ marginBottom: "1.5rem" }}>
+              <div style={{ 
+                fontWeight: 600, 
+                fontSize: "1rem",
+                marginBottom: 8,
+                color: "#22C55E"
+              }}>
+                CONTACT
+              </div>
+              <div style={{ 
+                color: "#d1fae5", 
+                fontSize: "0.9rem",
+                marginBottom: 8 
+              }}>
+                📞 01 23 45 67 89<br />
+                📍 Paris, France
+              </div>
+              <div style={{ 
+                display: "flex", 
+                justifyContent: "center",
+                gap: 15, 
+                marginTop: 10 
+              }}>
+                <a href="mailto:contact@greencart.fr" style={{ color: "#fff", fontSize: 20 }}>✉️</a>
+                <a href="https://facebook.com" style={{ color: "#fff", fontSize: 20 }}>📘</a>
+                <a href="https://twitter.com" style={{ color: "#fff", fontSize: 20 }}>🐦</a>
+                <a href="https://instagram.com" style={{ color: "#fff", fontSize: 20 }}>📸</a>
+              </div>
+            </div>
+
+            {/* Liens essentiels */}
+            <div style={{ marginBottom: "1.5rem" }}>
+              <div style={{ 
+                display: "flex", 
+                flexWrap: "wrap",
+                justifyContent: "center",
+                gap: "15px",
+                fontSize: "0.9rem"
+              }}>
+                <a href="/apropos" style={{ color: "#d1fae5", textDecoration: "none" }}>À propos</a>
+                <a href="/faq" style={{ color: "#d1fae5", textDecoration: "none" }}>FAQ</a>
+                <a href="/cookies" style={{ color: "#d1fae5", textDecoration: "none" }}>Cookies</a>
+                <a href="/accessibilite" style={{ color: "#d1fae5", textDecoration: "none" }}>Accessibilité</a>
+              </div>
+            </div>
+
+            {/* Copyright */}
+            <div style={{
+              borderTop: "1px solid #263043",
+              paddingTop: 15,
+              color: "#b6c2d1",
+              fontSize: "0.85rem"
+            }}>
+              © 2023 GreenCart. Tous droits réservés.
+            </div>
+          </div>
+        </div>
+      ) : (
+        /* Footer desktop complet */
+        <div style={{
+          background: "#181F2A",
+          color: "#fff",
+          padding: "2.5rem 0 1.5rem 0"
+        }}>
         <div style={{
           maxWidth: 1200,
           margin: "0 auto",
@@ -198,6 +304,7 @@ const Footer = () => {
           </div>
         </div>
       </div>
+      )}
     </footer>
   );
 };
