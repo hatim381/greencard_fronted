@@ -72,11 +72,7 @@ const impactCards = [
 const Home = ({ user, onAddToCart }) => {
   const { isMobile } = useDeviceDetection();
   
-  // Si mobile, utiliser le composant mobile
-  if (isMobile) {
-    return <HomeMobile user={user} onAddToCart={onAddToCart} />;
-  }
-
+  // TOUS les hooks DOIVENT être déclarés en premier
   const [newsletterMsg, setNewsletterMsg] = useState('');
   const [allProducts, setAllProducts] = useState([]);
   const [products, setProducts] = useState([]);
@@ -118,6 +114,11 @@ const Home = ({ user, onAddToCart }) => {
     }
     setProducts(filtered.slice(0, 4));
   }, [allProducts, selectedCategory]);
+
+  // APRÈS tous les hooks, on peut faire le return conditionnel
+  if (isMobile) {
+    return <HomeMobile user={user} onAddToCart={onAddToCart} />;
+  }
 
   return (
     <div style={{ background: "#F8FAFB" }}>
