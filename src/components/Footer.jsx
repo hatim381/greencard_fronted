@@ -218,7 +218,10 @@ const Footer = () => {
               color: "#b6c2d1",
               fontSize: "0.85rem"
             }}>
-              © 2023 GreenCart. Tous droits réservés.
+              © 2023 GreenCart. Tous droits réservés.<br />
+              <span style={{ fontSize: "0.8rem", fontStyle: "italic", color: "#9CA3AF" }}>
+                Projet étudiant fictif
+              </span>
             </div>
           </div>
         </div>
@@ -296,7 +299,12 @@ const Footer = () => {
           marginRight: "auto",
           flexWrap: "wrap"
         }}>
-          <div>© 2023 GreenCart. Tous droits réservés.</div>
+          <div>
+            © 2023 GreenCart. Tous droits réservés.<br />
+            <span style={{ fontSize: "0.8rem", fontStyle: "italic", color: "#9CA3AF" }}>
+              Projet étudiant fictif
+            </span>
+          </div>
           <div style={{ display: "flex", gap: 18 }}>
             <a href="/accessibilite" style={{ color: "#b6c2d1", textDecoration: "none" }}>Accessibilité</a>
             <a href="/plan-du-site" style={{ color: "#b6c2d1", textDecoration: "none" }}>Plan du site</a>
