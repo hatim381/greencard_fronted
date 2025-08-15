@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import MobileBottomNav from './components/MobileBottomNav';
+import useDeviceDetection from './hooks/useDeviceDetection';
 import Home from './pages/Home';
 import ProductList from './pages/ProductList';
 import Dashboard from './pages/Dashboard';
@@ -25,6 +27,7 @@ import Faq from './pages/Faq';
 const API_URL = process.env.REACT_APP_API_URL || 'https://greencard-backend.onrender.com/api';
 
 function App() {
+  const { isMobile } = useDeviceDetection();
   const [user, setUser] = useState(() => {
     // Persistance utilisateur (optionnel)
     const stored = localStorage.getItem('greencart_user');
@@ -116,13 +119,15 @@ function App() {
 
   return (
     <Router>
-      <Navbar
-        user={user}
-        onLogout={handleLogout}
-        cartCount={user && user.role === 'consumer' ? cart.reduce((sum, i) => sum + i.quantity, 0) : 0}
-        darkMode={darkMode}
-        onToggleDarkMode={() => setDarkMode(dm => !dm)}
-      />
+      {!isMobile && (
+        <Navbar
+          user={user}
+          onLogout={handleLogout}
+          cartCount={user && user.role === 'consumer' ? cart.reduce((sum, i) => sum + i.quantity, 0) : 0}
+          darkMode={darkMode}
+          onToggleDarkMode={() => setDarkMode(dm => !dm)}
+        />
+      )}
       <Routes>
         <Route path="/" element={
           <Home
@@ -199,7 +204,8 @@ function App() {
         <Route path="/plan-du-site" element={<PlanDuSite />} />
         <Route path="/faq" element={<Faq />} />
       </Routes>
-      <Footer />
+      {!isMobile && <Footer />}
+      {isMobile && <MobileBottomNav user={user} />}
     </Router>
   );
 }

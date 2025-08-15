@@ -38,6 +38,25 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Scroll horizontal mobile */
+@media (max-width: 768px) {
+  /* Cache la scrollbar sur mobile */
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  
+  body {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  /* Optimisations tactiles */
+  button, a {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+}
+
 /* Classes utilitaires pour boutons */
 .btn {
   border: none;

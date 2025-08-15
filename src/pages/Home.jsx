@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import useDeviceDetection from '../hooks/useDeviceDetection';
+import HomeMobile from './HomeMobile';
 
 const API_URL = process.env.REACT_APP_API_URL || 'https://greencard-backend.onrender.com/api';
 
@@ -68,6 +70,13 @@ const impactCards = [
 ];
 
 const Home = ({ user, onAddToCart }) => {
+  const { isMobile } = useDeviceDetection();
+  
+  // Si mobile, utiliser le composant mobile
+  if (isMobile) {
+    return <HomeMobile user={user} onAddToCart={onAddToCart} />;
+  }
+
   const [newsletterMsg, setNewsletterMsg] = useState('');
   const [allProducts, setAllProducts] = useState([]);
   const [products, setProducts] = useState([]);
