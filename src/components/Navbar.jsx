@@ -127,6 +127,48 @@ const Navbar = ({ cartCount, user, onLogout, darkMode, onToggleDarkMode }) => {
           left: 0;
         }
 
+        .mobile-bottom-nav {
+          position: fixed;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          background: rgba(255, 255, 255, 0.95);
+          backdrop-filter: blur(20px);
+          border-top: 1px solid rgba(34, 197, 94, 0.1);
+          padding: 8px 0;
+          z-index: 1000;
+          display: none;
+        }
+
+        .mobile-bottom-nav.show {
+          display: flex;
+          justify-content: space-around;
+          align-items: center;
+        }
+
+        .bottom-nav-item {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          padding: 8px 12px;
+          text-decoration: none;
+          color: #6B7280;
+          transition: all 0.2s ease;
+          border-radius: 12px;
+          min-width: 60px;
+          position: relative;
+        }
+
+        .bottom-nav-item.active {
+          color: #22C55E;
+          background: rgba(34, 197, 94, 0.1);
+        }
+
+        .bottom-nav-item:hover {
+          color: #22C55E;
+          background: rgba(34, 197, 94, 0.05);
+        }
+
         @media (max-width: 768px) {
           .mobile-menu-btn {
             display: flex;
@@ -138,6 +180,14 @@ const Navbar = ({ cartCount, user, onLogout, darkMode, onToggleDarkMode }) => {
           
           .nav-actions-desktop {
             display: none;
+          }
+
+          .mobile-bottom-nav {
+            display: flex;
+          }
+
+          body {
+            padding-bottom: 70px;
           }
         }
       `}</style>
@@ -163,107 +213,30 @@ const Navbar = ({ cartCount, user, onLogout, darkMode, onToggleDarkMode }) => {
         {/* Version Mobile */}
         {isMobile ? (
           <>
-            {/* Menu hamburger à gauche */}
-            <button
-              className="mobile-menu-btn action-btn"
-              onClick={() => setMenuOpen(!menuOpen)}
-              style={{
-                background: "transparent",
-                border: "none",
-                width: "40px",
-                height: "40px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                cursor: "pointer"
-              }}
-              aria-label="Menu"
-            >
-              <span style={{ 
-                fontSize: "24px", 
-                color: darkMode ? "#E5E7EB" : "#374151" 
-              }}>
-                ☰
-              </span>
-            </button>
-
-            {/* Logo centré */}
+            {/* Header mobile épuré - Juste le logo centré */}
             <Link to="/" style={{ 
               display: "flex", 
               alignItems: "center", 
               textDecoration: "none",
-              position: "absolute",
-              left: "50%",
-              transform: "translateX(-50%)"
+              margin: "0 auto"
             }}>
               <img
                 src="/Images/logo.jpeg"
                 alt="GreenCart"
                 style={{
                   height: 35,
-                  borderRadius: "8px"
+                  borderRadius: "8px",
+                  marginRight: "8px"
                 }}
               />
+              <span style={{
+                color: "#22C55E",
+                fontWeight: 700,
+                fontSize: "1.1rem"
+              }}>
+                GreenCart
+              </span>
             </Link>
-
-            {/* Actions à droite */}
-            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-              {/* Panier */}
-              {(!user || user.role === 'consumer') && (
-                <Link 
-                  to="/cart" 
-                  style={{
-                    position: "relative",
-                    background: "transparent",
-                    border: "none",
-                    width: "40px",
-                    height: "40px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    textDecoration: "none"
-                  }}
-                >
-                  <span style={{ fontSize: "20px", color: "#22C55E" }}>🛒</span>
-                  {cartCount > 0 && (
-                    <span style={{
-                      position: 'absolute',
-                      top: -2,
-                      right: -2,
-                      background: '#EF4444',
-                      color: '#fff',
-                      borderRadius: '50%',
-                      fontSize: "10px",
-                      fontWeight: 700,
-                      width: 16,
-                      height: 16,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center'
-                    }}>
-                      {cartCount}
-                    </span>
-                  )}
-                </Link>
-              )}
-
-              {/* Profil */}
-              <Link 
-                to="/dashboard" 
-                style={{
-                  background: "transparent",
-                  border: "none",
-                  width: "40px",
-                  height: "40px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  textDecoration: "none"
-                }}
-              >
-                <span style={{ fontSize: "20px", color: "#22C55E" }}>👤</span>
-              </Link>
-            </div>
 
             {/* Menu mobile overlay */}
             <div 
@@ -271,7 +244,7 @@ const Navbar = ({ cartCount, user, onLogout, darkMode, onToggleDarkMode }) => {
               onClick={() => setMenuOpen(false)}
             />
 
-            {/* Menu mobile coulissant */}
+            {/* Menu mobile coulissant - Avec connexion/déconnexion */}
             <div className={`mobile-menu${menuOpen ? ' open' : ''}`}>
               <div style={{ 
                 display: "flex", 
@@ -298,10 +271,38 @@ const Navbar = ({ cartCount, user, onLogout, darkMode, onToggleDarkMode }) => {
                 </span>
               </div>
 
+              {/* Info utilisateur */}
+              {user && (
+                <div style={{
+                  background: "rgba(34, 197, 94, 0.1)",
+                  borderRadius: "12px",
+                  padding: "15px",
+                  marginBottom: "20px",
+                  border: "1px solid rgba(34, 197, 94, 0.2)"
+                }}>
+                  <div style={{ 
+                    display: "flex", 
+                    alignItems: "center", 
+                    marginBottom: "8px" 
+                  }}>
+                    <span style={{ fontSize: "18px", marginRight: "10px" }}>👋</span>
+                    <span style={{ fontWeight: 600, color: "#22C55E" }}>
+                      Bonjour {user.username || user.email}
+                    </span>
+                  </div>
+                  <div style={{ 
+                    fontSize: "12px", 
+                    color: "#666",
+                    textTransform: "capitalize" 
+                  }}>
+                    {user.role === 'consumer' ? 'Consommateur' : 
+                     user.role === 'producer' ? 'Producteur' : 'Administrateur'}
+                  </div>
+                </div>
+              )}
+
               {/* Navigation mobile */}
               {[
-                { path: "/", label: "Accueil", icon: "🏠" },
-                { path: "/products", label: "Produits", icon: "🌱" },
                 { path: "/apropos", label: "À propos", icon: "💡" },
                 { path: "/producteurs", label: "Producteurs", icon: "👨‍🌾" },
                 { path: "/impact", label: "Impact", icon: "🌍" },
@@ -380,30 +381,56 @@ const Navbar = ({ cartCount, user, onLogout, darkMode, onToggleDarkMode }) => {
                     }}
                   >
                     <span>🚪</span>
-                    Déconnexion
+                    Se déconnecter
                   </button>
                 ) : (
-                  <Link
-                    to="/login"
-                    onClick={() => setMenuOpen(false)}
-                    style={{
-                      width: "100%",
-                      background: "linear-gradient(135deg, #22C55E 0%, #16A34A 100%)",
-                      color: "#fff",
-                      textDecoration: "none",
-                      borderRadius: "12px",
-                      fontWeight: 600,
-                      fontSize: "1rem",
-                      padding: "15px",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      gap: "8px"
-                    }}
-                  >
-                    <span>🔑</span>
-                    Connexion
-                  </Link>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                    <Link
+                      to="/login"
+                      onClick={() => setMenuOpen(false)}
+                      style={{
+                        width: "100%",
+                        background: "linear-gradient(135deg, #22C55E 0%, #16A34A 100%)",
+                        color: "#fff",
+                        textDecoration: "none",
+                        borderRadius: "12px",
+                        fontWeight: 600,
+                        fontSize: "1rem",
+                        padding: "15px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: "8px",
+                        boxSizing: "border-box"
+                      }}
+                    >
+                      <span>🔑</span>
+                      Se connecter
+                    </Link>
+                    <Link
+                      to="/register"
+                      onClick={() => setMenuOpen(false)}
+                      style={{
+                        width: "100%",
+                        background: "#fff",
+                        color: "#22C55E",
+                        textDecoration: "none",
+                        borderRadius: "12px",
+                        fontWeight: 600,
+                        fontSize: "1rem",
+                        padding: "15px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: "8px",
+                        border: "2px solid #22C55E",
+                        boxSizing: "border-box"
+                      }}
+                    >
+                      <span>📝</span>
+                      Créer un compte
+                    </Link>
+                  </div>
                 )}
               </div>
             </div>
@@ -635,6 +662,86 @@ const Navbar = ({ cartCount, user, onLogout, darkMode, onToggleDarkMode }) => {
           </>
         )}
       </nav>
+
+      {/* Bottom Navigation Mobile */}
+      {isMobile && (
+        <div className="mobile-bottom-nav show">
+          <Link 
+            to="/" 
+            className={`bottom-nav-item${location.pathname === '/' ? ' active' : ''}`}
+          >
+            <span style={{ fontSize: "20px", marginBottom: "4px" }}>🏠</span>
+            <span style={{ fontSize: "11px", fontWeight: 500 }}>Accueil</span>
+          </Link>
+
+          <Link 
+            to="/products" 
+            className={`bottom-nav-item${location.pathname === '/products' ? ' active' : ''}`}
+          >
+            <span style={{ fontSize: "20px", marginBottom: "4px" }}>🌱</span>
+            <span style={{ fontSize: "11px", fontWeight: 500 }}>Produits</span>
+          </Link>
+
+          {/* Panier */}
+          {(!user || user.role === 'consumer') && (
+            <Link 
+              to="/cart" 
+              className={`bottom-nav-item${location.pathname === '/cart' ? ' active' : ''}`}
+              style={{ position: "relative" }}
+            >
+              <span style={{ fontSize: "20px", marginBottom: "4px" }}>🛒</span>
+              <span style={{ fontSize: "11px", fontWeight: 500 }}>Panier</span>
+              {cartCount > 0 && (
+                <span style={{
+                  position: 'absolute',
+                  top: 2,
+                  right: 8,
+                  background: '#EF4444',
+                  color: '#fff',
+                  borderRadius: '50%',
+                  fontSize: "9px",
+                  fontWeight: 700,
+                  width: 16,
+                  height: 16,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  {cartCount > 9 ? '9+' : cartCount}
+                </span>
+              )}
+            </Link>
+          )}
+
+          {/* Profil/Dashboard */}
+          <Link 
+            to="/dashboard" 
+            className={`bottom-nav-item${location.pathname === '/dashboard' ? ' active' : ''}`}
+          >
+            <span style={{ fontSize: "20px", marginBottom: "4px" }}>👤</span>
+            <span style={{ fontSize: "11px", fontWeight: 500 }}>
+              {user ? 'Profil' : 'Compte'}
+            </span>
+          </Link>
+
+          {/* Menu */}
+          <button 
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="bottom-nav-item"
+            style={{ 
+              background: "transparent", 
+              border: "none", 
+              cursor: "pointer",
+              color: menuOpen ? "#22C55E" : "#6B7280"
+            }}
+          >
+            <span style={{ fontSize: "20px", marginBottom: "4px" }}>
+              {menuOpen ? "✕" : "☰"}
+            </span>
+            <span style={{ fontSize: "11px", fontWeight: 500 }}>Menu</span>
+          </button>
+        </div>
+      )}
     </>
   );
 };
