@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-import MobileBottomNav from './components/MobileBottomNav';
 import useDeviceDetection from './hooks/useDeviceDetection';
 import Home from './pages/Home';
 import ProductList from './pages/ProductList';
@@ -119,15 +118,13 @@ function App() {
 
   return (
     <Router>
-      {!isMobile && (
-        <Navbar
-          user={user}
-          onLogout={handleLogout}
-          cartCount={user && user.role === 'consumer' ? cart.reduce((sum, i) => sum + i.quantity, 0) : 0}
-          darkMode={darkMode}
-          onToggleDarkMode={() => setDarkMode(dm => !dm)}
-        />
-      )}
+      <Navbar
+        user={user}
+        onLogout={handleLogout}
+        cartCount={user && user.role === 'consumer' ? cart.reduce((sum, i) => sum + i.quantity, 0) : 0}
+        darkMode={darkMode}
+        onToggleDarkMode={() => setDarkMode(dm => !dm)}
+      />
       <Routes>
         <Route path="/" element={
           <Home
@@ -204,8 +201,7 @@ function App() {
         <Route path="/plan-du-site" element={<PlanDuSite />} />
         <Route path="/faq" element={<Faq />} />
       </Routes>
-      {!isMobile && <Footer />}
-      {isMobile && <MobileBottomNav user={user} />}
+      <Footer />
     </Router>
   );
 }

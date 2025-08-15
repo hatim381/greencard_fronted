@@ -136,7 +136,7 @@ const Footer = () => {
         <div style={{
           background: "#181F2A",
           color: "#fff",
-          padding: "2rem 0 6rem 0", // Extra padding pour la bottom nav
+          padding: "2rem 0 8rem 0", // Augmenté le padding pour la bottom nav (8rem au lieu de 6rem)
           textAlign: "center"
         }}>
           <div style={{

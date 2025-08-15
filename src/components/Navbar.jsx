@@ -185,10 +185,6 @@ const Navbar = ({ cartCount, user, onLogout, darkMode, onToggleDarkMode }) => {
           .mobile-bottom-nav {
             display: flex;
           }
-
-          body {
-            padding-bottom: 70px;
-          }
         }
       `}</style>
 
