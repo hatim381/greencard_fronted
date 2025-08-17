@@ -179,8 +179,9 @@ const Footer = () => {
                 fontSize: "0.9rem",
                 marginBottom: 8 
               }}>
-                📞 01 23 45 67 89<br />
-                📍 Paris, France
+                � contact@greencart.fr<br />
+                📍 15 chemin des Maraîchers,<br />
+                34000 Montpellier, France
               </div>
               <div style={{ 
                 display: "flex", 
@@ -272,8 +273,9 @@ const Footer = () => {
           <div>
             <div style={{ fontWeight: 700, marginBottom: 8 }}>CONTACT</div>
             <div style={{ color: "#d1fae5", fontSize: "0.98em", marginBottom: 4 }}>
-              <span role="img" aria-label="phone">📞</span> 01 23 45 67 89<br />
-              <span role="img" aria-label="location">📍</span> Paris, France
+              📧 contact@greencart.fr<br />
+              📍 15 chemin des Maraîchers,<br />
+              34000 Montpellier, France
             </div>
             <div style={{ display: "flex", gap: 10, marginTop: 6 }}>
               <a href="mailto:contact@greencart.fr" style={{ color: "#fff", fontSize: 18 }} aria-label="mail"><span role="img" aria-label="mail">✉️</span></a>
