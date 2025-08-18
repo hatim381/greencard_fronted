@@ -134,6 +134,8 @@ const ProducerProductForm = ({ user, product, onClose }) => {
             <option value="Fruits & légumes">Fruits & légumes</option>
             <option value="Produits laitiers">Produits laitiers</option>
             <option value="Viandes & Volaille">Viandes & Volaille</option>
+            <option value="Boulangerie">Boulangerie</option>
+            <option value="Boissons">Boissons</option>
           </select>
           <label style={{ fontWeight: 600 }}>Date limite de consommation *</label>
           <input type="date" value={dlc} onChange={e => setDlc(e.target.value)} required style={{ width: '100%' }} />
