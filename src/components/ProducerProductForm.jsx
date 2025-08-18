@@ -139,7 +139,7 @@ const ProducerProductForm = ({ user, product, onClose }) => {
           <input type="date" value={dlc} onChange={e => setDlc(e.target.value)} required style={{ width: '100%' }} />
           <label style={{ fontWeight: 600 }}>Image</label>
           <input type="file" accept="image/*" onChange={e => setImage(e.target.files[0])} style={{ width: '100%' }} />
-          <label style={{ fontWeight: 600 }}>Réduction CO2 (kg)</label>
+          <label style={{ fontWeight: 600 }}>Réduction CO2 (%)</label>
           <input type="number" step="0.01" value={co2Reduction} onChange={e => setCo2Reduction(e.target.value)} style={{ width: '100%' }} />
           <label style={{ fontWeight: 600 }}>Description</label>
           <textarea value={description} onChange={e => setDescription(e.target.value)} style={{ width: '100%' }} />
