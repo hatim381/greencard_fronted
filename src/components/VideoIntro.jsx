@@ -63,53 +63,40 @@ const VideoIntro = ({ onVideoEnd }) => {
       left: 0,
       width: '100vw',
       height: '100vh',
-      backgroundColor: 'white',
+      backgroundColor: 'rgba(255, 255, 255, 0.95)',
+      backdropFilter: 'blur(2px)',
+      WebkitBackdropFilter: 'blur(2px)',
       zIndex: 9999,
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      cursor: 'pointer'
+      cursor: 'pointer',
+      transform: 'translateZ(0)',
+      WebkitTransform: 'translateZ(0)'
     }}>
-      {/* Conteneur pour la vidéo avec fond blanc forcé */}
-      <div style={{
-        position: 'relative',
-        width: '100%',
-        height: '100%',
-        backgroundColor: 'white',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-      }}>
-        {/* Fond blanc absolu derrière la vidéo */}
-        <div style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          backgroundColor: 'white',
-          zIndex: 1
-        }} />
-        
-        <video
-          ref={videoRef}
-          autoPlay
-          muted
-          playsInline
-          style={{
-            maxWidth: '100%',
-            maxHeight: '100%',
-            objectFit: 'contain',
-            position: 'relative',
-            zIndex: 2,
-            backgroundColor: 'white'
-          }}
-        >
-          <source src="/Videos/grelogo.webm" type="video/webm" />
-          <source src="/Videos/grelogo.mp4" type="video/mp4" />
-          Votre navigateur ne supporte pas la vidéo HTML5.
-        </video>
-      </div>
+      
+      <video
+        ref={videoRef}
+        autoPlay
+        muted
+        playsInline
+        style={{
+          maxWidth: '100%',
+          maxHeight: '100%',
+          objectFit: 'contain',
+          backgroundColor: 'transparent',
+          border: 'none',
+          outline: 'none',
+          // Force la transparence sur mobile en masquant le noir
+          filter: window.innerWidth <= 768 ? 'brightness(1.2) contrast(1.1)' : 'none',
+          // Alternative pour forcer la transparence
+          mixBlendMode: window.innerWidth <= 768 ? 'multiply' : 'normal'
+        }}
+      >
+        <source src="/Videos/grelogo.webm" type="video/webm" />
+        <source src="/Videos/grelogo.mp4" type="video/mp4" />
+        Votre navigateur ne supporte pas la vidéo HTML5.
+      </video>
       
       {/* Indicateur discret pour encourager l'interaction */}
       <div style={{
@@ -125,8 +112,7 @@ const VideoIntro = ({ onVideoEnd }) => {
         opacity: 0.8,
         textAlign: 'center',
         pointerEvents: 'none',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-        zIndex: 3
+        boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
       }}>
         Touchez l'écran pour continuer
       </div>
