@@ -63,56 +63,53 @@ const VideoIntro = ({ onVideoEnd }) => {
       left: 0,
       width: '100vw',
       height: '100vh',
-      backgroundColor: 'rgba(255, 255, 255, 0.95)',
-      backdropFilter: 'blur(2px)',
-      WebkitBackdropFilter: 'blur(2px)',
+      backgroundColor: 'white',
       zIndex: 9999,
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      cursor: 'pointer',
-      background: 'rgba(255, 255, 255, 0.95)',
-      transform: 'translateZ(0)',
-      WebkitTransform: 'translateZ(0)'
+      cursor: 'pointer'
     }}>
-      {/* Fond blanc forcé pour mobile */}
+      {/* Conteneur pour la vidéo avec fond blanc forcé */}
       <div style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
+        position: 'relative',
         width: '100%',
         height: '100%',
-        backgroundColor: 'rgba(255, 255, 255, 0.95)',
-        zIndex: -1
-      }} />
-      
-      <video
-        ref={videoRef}
-        autoPlay
-        muted
-        playsInline
-        style={{
-          maxWidth: '100%',
-          maxHeight: '100%',
-          objectFit: 'contain',
-          backgroundColor: 'transparent',
-          border: 'none',
-          outline: 'none',
-          // Force la transparence sur mobile
-          mixBlendMode: 'normal',
-          opacity: 1,
-          // Empêche le fond noir sur mobile
-          WebkitBackfaceVisibility: 'hidden',
-          backfaceVisibility: 'hidden',
-          // Force le rendu GPU pour la transparence
-          willChange: 'transform',
-          transform: 'translate3d(0,0,0)'
-        }}
-      >
-        <source src="/Videos/grelogo.webm" type="video/webm" />
-        <source src="/Videos/grelogo.mp4" type="video/mp4" />
-        Votre navigateur ne supporte pas la vidéo HTML5.
-      </video>
+        backgroundColor: 'white',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}>
+        {/* Fond blanc absolu derrière la vidéo */}
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          backgroundColor: 'white',
+          zIndex: 1
+        }} />
+        
+        <video
+          ref={videoRef}
+          autoPlay
+          muted
+          playsInline
+          style={{
+            maxWidth: '100%',
+            maxHeight: '100%',
+            objectFit: 'contain',
+            position: 'relative',
+            zIndex: 2,
+            backgroundColor: 'white'
+          }}
+        >
+          <source src="/Videos/grelogo.webm" type="video/webm" />
+          <source src="/Videos/grelogo.mp4" type="video/mp4" />
+          Votre navigateur ne supporte pas la vidéo HTML5.
+        </video>
+      </div>
       
       {/* Indicateur discret pour encourager l'interaction */}
       <div style={{
@@ -128,7 +125,8 @@ const VideoIntro = ({ onVideoEnd }) => {
         opacity: 0.8,
         textAlign: 'center',
         pointerEvents: 'none',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+        boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+        zIndex: 3
       }}>
         Touchez l'écran pour continuer
       </div>
