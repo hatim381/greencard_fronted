@@ -28,7 +28,15 @@ const API_URL = process.env.REACT_APP_API_URL || 'https://greencard-backend.onre
 
 function App() {
   const { isMobile } = useDeviceDetection();
-  const [showVideoIntro, setShowVideoIntro] = useState(!isMobile); // Pas de vidéo sur mobile
+  const [showVideoIntro, setShowVideoIntro] = useState(true);
+  
+  // Effet pour désactiver la vidéo sur mobile après le premier rendu
+  useEffect(() => {
+    if (isMobile) {
+      setShowVideoIntro(false);
+    }
+  }, [isMobile]);
+
   const [user, setUser] = useState(() => {
     // Persistance utilisateur (optionnel)
     const stored = localStorage.getItem('greencart_user');
