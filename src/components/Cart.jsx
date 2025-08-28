@@ -308,17 +308,36 @@ const Cart = ({ cart, onRemove, onClear, user }) => {
                   <option value="paypal">PayPal</option>
                   <option value="especes">Espèces à la livraison</option>
                 </select>
+                {/* Debug info */}
+                <div style={{ fontSize: '12px', color: '#666', marginTop: 4 }}>
+                  Debug: payment = "{payment}", showStripeForm = {showStripeForm.toString()}
+                </div>
               </div>
 
               {/* Formulaire Stripe pour paiement CB */}
               {showStripeForm && (
-                <div style={{ marginTop: 20, marginBottom: 20 }}>
+                <div style={{ marginTop: 20, marginBottom: 20, border: '2px solid #22C55E', borderRadius: 8, padding: 16 }}>
+                  <h3 style={{ color: '#22C55E', marginBottom: 16, textAlign: 'center' }}>
+                    💳 Paiement par Carte Bancaire
+                  </h3>
                   <StripePaymentForm
-                    totalAmount={cart.reduce((sum, item) => sum + item.price * item.quantity, 0)}
+                    totalAmount={cart.reduce((sum, item) => {
+                      const price = typeof item.price === "string"
+                        ? parseFloat(item.price.replace(/[^\d.,]/g, "").replace(",", ".")) || 0
+                        : item.price;
+                      return sum + price * item.quantity;
+                    }, 0)}
                     onPaymentSuccess={handleStripeSuccess}
                     onPaymentError={handleStripeError}
                     loading={loading}
                   />
+                </div>
+              )}
+              
+              {/* Debug: Affichage conditionnel */}
+              {payment === "cb" && !showStripeForm && (
+                <div style={{ color: 'red', padding: 10, background: '#fee', borderRadius: 4, margin: '10px 0' }}>
+                  ⚠️ DEBUG: Payment = "cb" mais showStripeForm = false
                 </div>
               )}
 
