@@ -31,6 +31,9 @@ const StripePaymentForm = ({
     try {
       // 1. Créer un PaymentIntent côté backend
       const API_URL = process.env.REACT_APP_API_URL || 'https://greencard-backend.onrender.com/api';
+      console.log('🔵 API_URL:', API_URL);
+      console.log('🔵 Montant à payer:', totalAmount, '€ (soit', Math.round(totalAmount * 100), 'centimes)');
+      
       const response = await fetch(`${API_URL}/stripe/create-payment-intent`, {
         method: 'POST',
         headers: {
@@ -42,7 +45,14 @@ const StripePaymentForm = ({
         }),
       });
 
-      const { client_secret, payment_intent_id } = await response.json();
+      const responseData = await response.json();
+      console.log('🔵 Réponse create-payment-intent:', responseData);
+
+      if (!response.ok) {
+        throw new Error(responseData.error || 'Erreur lors de la création du paiement');
+      }
+
+      const { client_secret, payment_intent_id } = responseData;
 
       if (!client_secret) {
         throw new Error('Erreur lors de la création du paiement');
@@ -51,6 +61,7 @@ const StripePaymentForm = ({
       // 2. Confirmer le paiement avec Stripe
       const cardElement = elements.getElement(CardNumberElement);
       
+      console.log('🔵 Confirmation du paiement avec client_secret:', client_secret);
       const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(
         client_secret,
         {
@@ -61,17 +72,23 @@ const StripePaymentForm = ({
       );
 
       if (stripeError) {
+        console.log('❌ Erreur Stripe:', stripeError);
         setError(stripeError.message);
         onPaymentError?.(stripeError);
       } else if (paymentIntent.status === 'succeeded') {
         // 3. Succès !
+        console.log('✅ Paiement réussi:', paymentIntent);
         onPaymentSuccess?.({
           payment_intent_id: paymentIntent.id,
           amount: paymentIntent.amount,
           status: paymentIntent.status
         });
+      } else {
+        console.log('⚠️ Statut de paiement inattendu:', paymentIntent.status);
+        setError(`Statut de paiement inattendu: ${paymentIntent.status}`);
       }
     } catch (err) {
+      console.log('❌ Erreur générale:', err);
       setError(err.message);
       onPaymentError?.(err);
     } finally {

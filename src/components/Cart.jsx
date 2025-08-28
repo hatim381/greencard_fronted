@@ -99,8 +99,9 @@ const Cart = ({ cart, onRemove, onClear, user }) => {
   };
 
   const handleStripeSuccess = async (paymentData) => {
+    console.log('🟢 handleStripeSuccess appelé avec:', paymentData);
     try {
-      await orders.create({
+      const orderData = {
         consumer_id: user.id,
         address,
         payment: "cb",
@@ -112,7 +113,11 @@ const Cart = ({ cart, onRemove, onClear, user }) => {
           product_id: item.product_id ?? item.id,
           quantity: item.quantity,
         })),
-      });
+      };
+      
+      console.log('🟢 Envoi de la commande avec:', orderData);
+      
+      await orders.create(orderData);
 
       setOrderMsg("Commande passée avec succès !");
       onClear();
@@ -123,7 +128,10 @@ const Cart = ({ cart, onRemove, onClear, user }) => {
       setEmail("");
       setPhone("");
       setInstructions("");
+      
+      console.log('✅ Commande créée avec succès !');
     } catch (err) {
+      console.log('❌ Erreur lors de la finalisation de la commande:', err);
       setError("Erreur lors de la finalisation de la commande : " + (err.response?.data?.error || err.message));
     }
   };
