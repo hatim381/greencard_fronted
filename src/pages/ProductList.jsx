@@ -3,6 +3,7 @@ import axios from 'axios';
 import ProductCard from '../components/ProductCard';
 import ProducerProductForm from '../components/ProducerProductForm';
 import useDeviceDetection from '../hooks/useDeviceDetection';
+import { products } from '../services/api';
 
 // Définir l'URL de base de l'API à partir des variables d'environnement
 const API_URL = process.env.REACT_APP_API_URL || 'https://greencard-backend.onrender.com/api';
@@ -64,6 +65,28 @@ const ProductList = ({ onAddToCart, user }) => {
   const handleEdit = (product) => {
     setEditProduct(product);
     setShowForm(true);
+  };
+
+  const handleDelete = async (productId) => {
+    if (!window.confirm('Êtes-vous sûr de vouloir supprimer ce produit ? Cette action est irréversible.')) {
+      return;
+    }
+
+    try {
+      await products.delete(productId);
+      // Recharger la liste des produits
+      setLoading(true);
+      axios.get(`${API_URL}/products`)
+        .then(res => {
+          const filteredProducts = res.data.filter(p => p.producer_id === user.id);
+          setItems(filteredProducts);
+          setAllItems(filteredProducts);
+        })
+        .catch(() => setError("Erreur lors du chargement des produits"))
+        .finally(() => setLoading(false));
+    } catch (error) {
+      alert('Erreur lors de la suppression du produit : ' + (error.response?.data?.error || error.message));
+    }
   };
 
   const handleFormClose = (refresh = false) => {
@@ -332,26 +355,74 @@ const ProductList = ({ onAddToCart, user }) => {
                       : "Rupture de stock"}
                 </div>
               </div>
-              <button
-                className="btn btn-primary"
-                style={{
-                  width: "100%",
-                  marginTop: 16,
-                  background: "#22C55E",
-                  border: "none",
-                  color: "#fff",
-                  fontWeight: 700,
-                  fontSize: "1.08em",
-                  borderRadius: 8,
-                  boxShadow: "0 2px 8px #22C55E22",
-                  letterSpacing: 0.5,
-                  transition: "background 0.18s, transform 0.13s",
-                }}
-                onClick={onAddToCart ? () => onAddToCart(p) : undefined}
-                disabled={!onAddToCart}
-              >
-                Ajouter
-              </button>
+              {/* Boutons différents selon le rôle */}
+              {user && user.role === 'producer' ? (
+                <div style={{ display: 'flex', gap: 8, marginTop: 16 }}>
+                  <button
+                    className="btn btn-outline-green"
+                    style={{
+                      flex: 1,
+                      border: "2px solid #22C55E",
+                      background: "transparent",
+                      color: "#22C55E",
+                      fontWeight: 600,
+                      fontSize: "1em",
+                      borderRadius: 8,
+                      transition: "all 0.18s",
+                    }}
+                    onClick={() => handleEdit(p)}
+                    onMouseOver={e => {
+                      e.target.style.background = "#22C55E";
+                      e.target.style.color = "#fff";
+                    }}
+                    onMouseOut={e => {
+                      e.target.style.background = "transparent";
+                      e.target.style.color = "#22C55E";
+                    }}
+                  >
+                    Modifier
+                  </button>
+                  <button
+                    className="btn btn-danger"
+                    style={{
+                      flex: 1,
+                      background: "#ef4444",
+                      border: "none",
+                      color: "#fff",
+                      fontWeight: 600,
+                      fontSize: "1em",
+                      borderRadius: 8,
+                      transition: "background 0.18s",
+                    }}
+                    onClick={() => handleDelete(p.id)}
+                    onMouseOver={e => e.target.style.background = "#dc2626"}
+                    onMouseOut={e => e.target.style.background = "#ef4444"}
+                  >
+                    Supprimer
+                  </button>
+                </div>
+              ) : (
+                <button
+                  className="btn btn-primary"
+                  style={{
+                    width: "100%",
+                    marginTop: 16,
+                    background: "#22C55E",
+                    border: "none",
+                    color: "#fff",
+                    fontWeight: 700,
+                    fontSize: "1.08em",
+                    borderRadius: 8,
+                    boxShadow: "0 2px 8px #22C55E22",
+                    letterSpacing: 0.5,
+                    transition: "background 0.18s, transform 0.13s",
+                  }}
+                  onClick={onAddToCart ? () => onAddToCart(p) : undefined}
+                  disabled={!onAddToCart}
+                >
+                  Ajouter
+                </button>
+              )}
             </div>
           </div>
         ))}

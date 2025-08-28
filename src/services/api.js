@@ -52,6 +52,7 @@ export const products = {
   // On accepte une config optionnelle pour pouvoir passer des headers (ex: multipart/form-data)
   add: (data, config = {}) => http.post("/products/", data, config),
   update: (id, data, config = {}) => http.put(`/products/${id}`, data, config),
+  delete: (id) => http.delete(`/products/${id}`),
 };
 
 // --- Commandes ---
