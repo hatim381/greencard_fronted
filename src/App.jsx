@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import axios from 'axios';
+import { loadStripe } from '@stripe/stripe-js';
+import { Elements } from '@stripe/react-stripe-js';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import VideoIntro from './components/VideoIntro';
@@ -25,6 +27,9 @@ import PlanDuSite from './pages/PlanDuSite';
 import Faq from './pages/Faq';
 
 const API_URL = process.env.REACT_APP_API_URL || 'https://greencard-backend.onrender.com/api';
+
+// Configuration Stripe
+const stripePromise = loadStripe('pk_test_51S17BwCNTaKCn2KI9MUrPXLwDSDKjGggCieGqk0yF9htmJAZHDT7E65mxyMa50KetL2YsoQSw6sdpBuSadjO9GTA00FYwFGlcN');
 
 function App() {
   const { isMobile } = useDeviceDetection();
@@ -131,7 +136,7 @@ function App() {
   };
 
   return (
-    <>
+    <Elements stripe={stripePromise}>
       {showVideoIntro && <VideoIntro onVideoEnd={handleVideoEnd} />}
       <Router>
       <Navbar
@@ -219,7 +224,7 @@ function App() {
       </Routes>
       <Footer />
     </Router>
-    </>
+    </Elements>
   );
 }
 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { orders } from "../services/api";
+import StripePaymentForm from "./StripePaymentForm";
 
 const Cart = ({ cart, onRemove, onClear, user }) => {
   const [showOrderForm, setShowOrderForm] = useState(false);
@@ -11,6 +12,7 @@ const Cart = ({ cart, onRemove, onClear, user }) => {
   const [loading, setLoading] = useState(false);
   const [orderMsg, setOrderMsg] = useState("");
   const [error, setError] = useState("");
+  const [showStripeForm, setShowStripeForm] = useState(false);
 
   useEffect(() => {
     setAddress(user?.default_address || "");
@@ -89,6 +91,45 @@ const Cart = ({ cart, onRemove, onClear, user }) => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handlePaymentMethodChange = (selectedPayment) => {
+    setPayment(selectedPayment);
+    setShowStripeForm(selectedPayment === "cb");
+  };
+
+  const handleStripeSuccess = async (paymentData) => {
+    try {
+      await orders.create({
+        consumer_id: user.id,
+        address,
+        payment: "cb",
+        email,
+        phone,
+        instructions,
+        payment_intent_id: paymentData.payment_intent_id,
+        items: cart.map((item) => ({
+          product_id: item.product_id ?? item.id,
+          quantity: item.quantity,
+        })),
+      });
+
+      setOrderMsg("Commande passée avec succès !");
+      onClear();
+      setShowOrderForm(false);
+      setShowStripeForm(false);
+      setAddress("");
+      setPayment("");
+      setEmail("");
+      setPhone("");
+      setInstructions("");
+    } catch (err) {
+      setError("Erreur lors de la finalisation de la commande : " + (err.response?.data?.error || err.message));
+    }
+  };
+
+  const handleStripeError = (error) => {
+    setError("Erreur de paiement : " + error.message);
   };
 
   return (
@@ -258,7 +299,7 @@ const Cart = ({ cart, onRemove, onClear, user }) => {
                 <label style={{ fontWeight: 600 }}>Moyen de paiement *</label>
                 <select
                   value={payment}
-                  onChange={(e) => setPayment(e.target.value)}
+                  onChange={(e) => handlePaymentMethodChange(e.target.value)}
                   required
                   style={{ width: "100%" }}
                 >
@@ -269,33 +310,29 @@ const Cart = ({ cart, onRemove, onClear, user }) => {
                 </select>
               </div>
 
-              {payment === "cb" && (
-                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                  <label style={{ fontWeight: 600 }}>Numéro de carte bancaire</label>
-                  <input
-                    type="text"
-                    maxLength={19}
-                    placeholder="1234 5678 9012 3456"
-                    pattern="\d{4} \d{4} \d{4} \d{4}"
-                    required
-                    style={{ width: "100%" }}
+              {/* Formulaire Stripe pour paiement CB */}
+              {showStripeForm && (
+                <div style={{ marginTop: 20, marginBottom: 20 }}>
+                  <StripePaymentForm
+                    totalAmount={cart.reduce((sum, item) => sum + item.price * item.quantity, 0)}
+                    onPaymentSuccess={handleStripeSuccess}
+                    onPaymentError={handleStripeError}
+                    loading={loading}
                   />
-                  <div style={{ display: "flex", gap: 8 }}>
-                    <input type="text" maxLength={5} placeholder="MM/AA" required style={{ width: 80 }} />
-                    <input type="text" maxLength={3} placeholder="CVC" required style={{ width: 60 }} />
-                  </div>
                 </div>
               )}
 
-              <div
-                style={{
-                  background: "#F8FAFB",
-                  borderRadius: 10,
-                  padding: 14,
-                  marginBottom: 4,
-                  border: "1px solid #E5E7EB",
-                }}
-              >
+              {/* Affichage du résumé seulement si ce n'est pas un paiement CB */}
+              {payment !== "cb" && (
+                <div
+                  style={{
+                    background: "#F8FAFB",
+                    borderRadius: 10,
+                    padding: 14,
+                    marginBottom: 4,
+                    border: "1px solid #E5E7EB",
+                  }}
+                >
                 <div style={{ fontWeight: 600, marginBottom: 6, color: "#16A34A" }}>
                   Résumé de la commande :
                 </div>
@@ -323,21 +360,41 @@ const Cart = ({ cart, onRemove, onClear, user }) => {
                   €
                 </div>
               </div>
+              )}
 
               {error && <div style={{ color: "#e11d48", marginBottom: 8 }}>{error}</div>}
 
-              <div style={{ display: "flex", gap: 10, marginTop: 8 }}>
-                <button
-                  type="button"
-                  className="btn btn-outline-green"
-                  onClick={() => setShowOrderForm(false)}
-                >
-                  Annuler
-                </button>
-                <button type="submit" className="btn btn-primary" disabled={loading}>
-                  {loading ? "Commande..." : "Valider la commande"}
-                </button>
-              </div>
+              {/* Boutons seulement pour les paiements non-CB */}
+              {payment !== "cb" && (
+                <div style={{ display: "flex", gap: 10, marginTop: 8 }}>
+                  <button
+                    type="button"
+                    className="btn btn-outline-green"
+                    onClick={() => setShowOrderForm(false)}
+                  >
+                    Annuler
+                  </button>
+                  <button type="submit" className="btn btn-primary" disabled={loading}>
+                    {loading ? "Commande..." : "Valider la commande"}
+                  </button>
+                </div>
+              )}
+
+              {/* Bouton annuler pour paiement CB */}
+              {payment === "cb" && (
+                <div style={{ display: "flex", justifyContent: "center", marginTop: 8 }}>
+                  <button
+                    type="button"
+                    className="btn btn-outline-green"
+                    onClick={() => {
+                      setShowOrderForm(false);
+                      setShowStripeForm(false);
+                    }}
+                  >
+                    Annuler
+                  </button>
+                </div>
+              )}
             </form>
           )}
         </div>
