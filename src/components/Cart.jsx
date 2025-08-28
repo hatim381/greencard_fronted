@@ -308,10 +308,6 @@ const Cart = ({ cart, onRemove, onClear, user }) => {
                   <option value="paypal">PayPal</option>
                   <option value="especes">Espèces à la livraison</option>
                 </select>
-                {/* Debug info */}
-                <div style={{ fontSize: '12px', color: '#666', marginTop: 4 }}>
-                  Debug: payment = "{payment}", showStripeForm = {showStripeForm.toString()}
-                </div>
               </div>
 
               {/* Formulaire Stripe pour paiement CB */}
@@ -331,13 +327,6 @@ const Cart = ({ cart, onRemove, onClear, user }) => {
                     onPaymentError={handleStripeError}
                     loading={loading}
                   />
-                </div>
-              )}
-              
-              {/* Debug: Affichage conditionnel */}
-              {payment === "cb" && !showStripeForm && (
-                <div style={{ color: 'red', padding: 10, background: '#fee', borderRadius: 4, margin: '10px 0' }}>
-                  ⚠️ DEBUG: Payment = "cb" mais showStripeForm = false
                 </div>
               )}
 
