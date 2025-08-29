@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { orders } from "../services/api";
 import StripePaymentForm from "./StripePaymentForm";
-import UniversalPaymentForm from "./UniversalPaymentForm";
+import PayPalPaymentWrapper from "./PayPalPaymentWrapper";
 
 const Cart = ({ cart, onRemove, onClear, user }) => {
   const [showOrderForm, setShowOrderForm] = useState(false);
@@ -386,7 +386,7 @@ const Cart = ({ cart, onRemove, onClear, user }) => {
                   <h3 style={{ color: '#0070BA', marginBottom: 16, textAlign: 'center' }}>
                     🟡 Paiement PayPal
                   </h3>
-                  <UniversalPaymentForm
+                  <PayPalPaymentWrapper
                     totalAmount={cart.reduce((sum, item) => {
                       const price = typeof item.price === "string"
                         ? parseFloat(item.price.replace(/[^\d.,]/g, "").replace(",", ".")) || 0

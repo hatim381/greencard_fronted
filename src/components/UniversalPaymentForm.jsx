@@ -9,7 +9,8 @@ const UniversalPaymentForm = ({
   totalAmount, 
   onPaymentSuccess, 
   onPaymentError, 
-  loading = false 
+  loading = false,
+  clientSecret
 }) => {
   const stripe = useStripe();
   const elements = useElements();
@@ -20,7 +21,7 @@ const UniversalPaymentForm = ({
     event.preventDefault();
     event.stopPropagation();
     
-    console.log('🔵 handleSubmit appelé (Universal Payment) !');
+    console.log('� handleSubmit PayPal appelé !');
     
     if (!stripe || !elements) {
       console.log('❌ Stripe ou Elements non disponible');
@@ -28,41 +29,18 @@ const UniversalPaymentForm = ({
       return false;
     }
 
+    if (!clientSecret) {
+      console.log('❌ Pas de clientSecret disponible');
+      setError('Paiement non initialisé. Veuillez patienter ou recharger la page.');
+      return false;
+    }
+
     setIsProcessing(true);
     setError('');
 
     try {
-      // 1. Créer un PaymentIntent côté backend
-      const API_URL = process.env.REACT_APP_API_URL || 'https://greencard-backend.onrender.com/api';
-      console.log('🔵 API_URL:', API_URL);
-      console.log('🔵 Montant à payer:', totalAmount, '€ (soit', Math.round(totalAmount * 100), 'centimes)');
-      
-      const response = await fetch(`${API_URL}/stripe/create-payment-intent`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          amount: Math.round(totalAmount * 100), // Convertir en centimes
-          currency: 'eur'
-        }),
-      });
-
-      const responseData = await response.json();
-      console.log('🔵 Réponse create-payment-intent:', responseData);
-
-      if (!response.ok) {
-        throw new Error(responseData.error || 'Erreur lors de la création du paiement');
-      }
-
-      const { client_secret } = responseData;
-
-      if (!client_secret) {
-        throw new Error('Erreur lors de la création du paiement');
-      }
-
-      // 2. Confirmer le paiement avec Stripe (CB, PayPal, Apple Pay, etc.)
-      console.log('🔵 Confirmation du paiement avec client_secret:', client_secret);
+      // Confirmer le paiement avec Stripe (CB, PayPal, Apple Pay, etc.)
+      console.log('� Confirmation du paiement PayPal avec client_secret:', clientSecret);
       const { error: stripeError, paymentIntent } = await stripe.confirmPayment({
         elements,
         confirmParams: {
@@ -72,23 +50,23 @@ const UniversalPaymentForm = ({
       });
 
       if (stripeError) {
-        console.log('❌ Erreur Stripe:', stripeError);
+        console.log('❌ Erreur Stripe PayPal:', stripeError);
         setError(stripeError.message);
         onPaymentError?.(stripeError);
       } else if (paymentIntent && paymentIntent.status === 'succeeded') {
-        // 3. Succès !
-        console.log('✅ Paiement réussi:', paymentIntent);
+        // Succès !
+        console.log('✅ Paiement PayPal réussi:', paymentIntent);
         onPaymentSuccess?.({
           payment_intent_id: paymentIntent.id,
           amount: paymentIntent.amount,
           status: paymentIntent.status
         });
       } else {
-        console.log('⚠️ Statut de paiement inattendu:', paymentIntent?.status);
+        console.log('⚠️ Statut de paiement PayPal inattendu:', paymentIntent?.status);
         setError(`Statut de paiement inattendu: ${paymentIntent?.status || 'unknown'}`);
       }
     } catch (err) {
-      console.log('❌ Erreur générale:', err);
+      console.log('❌ Erreur générale PayPal:', err);
       setError(err.message);
       onPaymentError?.(err);
     } finally {
@@ -131,11 +109,11 @@ const UniversalPaymentForm = ({
       <button
         type="button"
         onClick={handleSubmit}
-        disabled={!stripe || isProcessing || loading}
+        disabled={!stripe || isProcessing || loading || !clientSecret}
         style={{
           width: '100%',
           padding: 16,
-          backgroundColor: isProcessing || loading ? '#d1d5db' : '#22C55E',
+          backgroundColor: isProcessing || loading ? '#d1d5db' : '#0070BA',
           color: '#fff',
           border: 'none',
           borderRadius: 8,
@@ -145,7 +123,7 @@ const UniversalPaymentForm = ({
           transition: 'background-color 0.2s'
         }}
       >
-        {isProcessing ? 'Traitement...' : `Payer ${totalAmount.toFixed(2)}€`}
+        {isProcessing ? 'Traitement...' : `Payer ${totalAmount.toFixed(2)}€ avec PayPal`}
       </button>
     </div>
   );
