@@ -860,7 +860,7 @@ const Cart = ({ cart, onRemove, onClear, onUpdateQuantity, user }) => {
 
                   <div style={{
                     display: "grid",
-                    gridTemplateColumns: "1fr 1fr",
+                    gridTemplateColumns: "1fr 1fr 1fr",
                     gap: "1rem",
                     marginBottom: "1.5rem"
                   }}>
@@ -917,6 +917,33 @@ const Cart = ({ cart, onRemove, onClear, onUpdateQuantity, user }) => {
                         <div style={{ fontSize: "0.85rem", opacity: 0.8 }}>Paiement sécurisé avec PayPal</div>
                       </div>
                     </label>
+
+                    {/* Option Espèces à la livraison */}
+                    <label style={{
+                      display: "flex",
+                      alignItems: "center",
+                      padding: "1rem",
+                      background: payment === "especes" ? "linear-gradient(135deg, #f59e0b, #d97706)" : "white",
+                      color: payment === "especes" ? "white" : "#374151",
+                      borderRadius: "12px",
+                      border: `2px solid ${payment === "especes" ? "#f59e0b" : "#e5e7eb"}`,
+                      cursor: "pointer",
+                      transition: "all 0.3s ease",
+                      boxShadow: payment === "especes" ? "0 8px 24px -4px rgba(245, 158, 11, 0.3)" : "0 2px 8px -2px rgba(0, 0, 0, 0.05)"
+                    }}>
+                      <input
+                        type="radio"
+                        name="payment"
+                        value="especes"
+                        checked={payment === "especes"}
+                        onChange={() => handlePaymentMethodChange("especes")}
+                        style={{ marginRight: "0.75rem", transform: "scale(1.2)" }}
+                      />
+                      <div>
+                        <div style={{ fontWeight: "600", fontSize: "1rem" }}>💰 Espèces</div>
+                        <div style={{ fontSize: "0.85rem", opacity: 0.8 }}>Paiement à la livraison</div>
+                      </div>
+                    </label>
                   </div>
                 </div>
 
@@ -970,7 +997,7 @@ const Cart = ({ cart, onRemove, onClear, onUpdateQuantity, user }) => {
                     ← Retour au panier
                   </button>
 
-                  {!showStripeForm && !showPaymentForm && (
+                  {(!showStripeForm && !showPaymentForm) && (
                     <button
                       type="submit"
                       disabled={loading || !payment}
