@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { orders } from "../services/api";
 import StripePaymentForm from "./StripePaymentForm";
+import UniversalPaymentForm from "./UniversalPaymentForm";
 
 const Cart = ({ cart, onRemove, onClear, user }) => {
   const [showOrderForm, setShowOrderForm] = useState(false);
@@ -13,6 +14,7 @@ const Cart = ({ cart, onRemove, onClear, user }) => {
   const [orderMsg, setOrderMsg] = useState("");
   const [error, setError] = useState("");
   const [showStripeForm, setShowStripeForm] = useState(false);
+  const [showPaymentForm, setShowPaymentForm] = useState(false);
 
   useEffect(() => {
     setAddress(user?.default_address || "");
@@ -93,9 +95,12 @@ const Cart = ({ cart, onRemove, onClear, user }) => {
     }
   };
 
+  const [showPaymentForm, setShowPaymentForm] = useState(false);
+  
   const handlePaymentMethodChange = (selectedPayment) => {
     setPayment(selectedPayment);
     setShowStripeForm(selectedPayment === "cb");
+    setShowPaymentForm(selectedPayment === "paypal");
   };
 
   const handleStripeSuccess = async (paymentData) => {
@@ -136,7 +141,46 @@ const Cart = ({ cart, onRemove, onClear, user }) => {
     }
   };
 
-  const handleStripeError = (error) => {
+  const handlePayPalSuccess = async (paymentData) => {
+    console.log('🟡 handlePayPalSuccess appelé avec:', paymentData);
+    try {
+      const orderData = {
+        consumer_id: user.id,
+        address,
+        payment: "paypal",
+        email,
+        phone,
+        instructions,
+        payment_intent_id: paymentData.payment_intent_id,
+        items: cart.map((item) => ({
+          product_id: item.product_id ?? item.id,
+          quantity: item.quantity,
+        })),
+      };
+      
+      console.log('🟡 Envoi de la commande PayPal avec:', orderData);
+      
+      await orders.create(orderData);
+
+      setOrderMsg("Commande PayPal passée avec succès !");
+      onClear();
+      setShowOrderForm(false);
+      setShowStripeForm(false);
+      setShowPaymentForm(false);
+      setAddress("");
+      setPayment("");
+      setEmail("");
+      setPhone("");
+      setInstructions("");
+      
+      console.log('✅ Commande PayPal créée avec succès !');
+    } catch (err) {
+      console.log('❌ Erreur lors de la finalisation de la commande PayPal:', err);
+      setError("Erreur lors de la finalisation de la commande PayPal : " + (err.response?.data?.error || err.message));
+    }
+  };
+
+  const handlePaymentError = (error) => {
     setError("Erreur de paiement : " + error.message);
   };
 
@@ -332,14 +376,34 @@ const Cart = ({ cart, onRemove, onClear, user }) => {
                       return sum + price * item.quantity;
                     }, 0)}
                     onPaymentSuccess={handleStripeSuccess}
-                    onPaymentError={handleStripeError}
+                    onPaymentError={handlePaymentError}
                     loading={loading}
                   />
                 </div>
               )}
 
-              {/* Affichage du résumé seulement si ce n'est pas un paiement CB */}
-              {payment !== "cb" && (
+              {/* Formulaire PayPal via Stripe */}
+              {showPaymentForm && (
+                <div style={{ marginTop: 20, marginBottom: 20, border: '2px solid #0070BA', borderRadius: 8, padding: 16 }}>
+                  <h3 style={{ color: '#0070BA', marginBottom: 16, textAlign: 'center' }}>
+                    🟡 Paiement PayPal
+                  </h3>
+                  <UniversalPaymentForm
+                    totalAmount={cart.reduce((sum, item) => {
+                      const price = typeof item.price === "string"
+                        ? parseFloat(item.price.replace(/[^\d.,]/g, "").replace(",", ".")) || 0
+                        : item.price;
+                      return sum + price * item.quantity;
+                    }, 0)}
+                    onPaymentSuccess={handlePayPalSuccess}
+                    onPaymentError={handlePaymentError}
+                    loading={loading}
+                  />
+                </div>
+              )}
+
+              {/* Affichage du résumé seulement si ce n'est pas un paiement CB ou PayPal */}
+              {payment !== "cb" && payment !== "paypal" && (
                 <div
                   style={{
                     background: "#F8FAFB",
@@ -380,8 +444,8 @@ const Cart = ({ cart, onRemove, onClear, user }) => {
 
               {error && <div style={{ color: "#e11d48", marginBottom: 8 }}>{error}</div>}
 
-              {/* Boutons seulement pour les paiements non-CB */}
-              {payment !== "cb" && (
+              {/* Boutons seulement pour les paiements non-CB et non-PayPal */}
+              {payment !== "cb" && payment !== "paypal" && (
                 <div style={{ display: "flex", gap: 10, marginTop: 8 }}>
                   <button
                     type="button"
@@ -396,8 +460,8 @@ const Cart = ({ cart, onRemove, onClear, user }) => {
                 </div>
               )}
 
-              {/* Bouton annuler pour paiement CB */}
-              {payment === "cb" && (
+              {/* Bouton annuler pour paiement CB ou PayPal */}
+              {(payment === "cb" || payment === "paypal") && (
                 <div style={{ display: "flex", justifyContent: "center", marginTop: 8 }}>
                   <button
                     type="button"
@@ -405,6 +469,7 @@ const Cart = ({ cart, onRemove, onClear, user }) => {
                     onClick={() => {
                       setShowOrderForm(false);
                       setShowStripeForm(false);
+                      setShowPaymentForm(false);
                     }}
                   >
                     Annuler

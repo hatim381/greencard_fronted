@@ -2,13 +2,10 @@ import React, { useState } from 'react';
 import {
   useStripe,
   useElements,
-  CardNumberElement,
-  CardExpiryElement,
-  CardCvcElement,
   PaymentElement
 } from '@stripe/react-stripe-js';
 
-const StripePaymentForm = ({ 
+const UniversalPaymentForm = ({ 
   totalAmount, 
   onPaymentSuccess, 
   onPaymentError, 
@@ -19,18 +16,16 @@ const StripePaymentForm = ({
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState('');
 
-  const handleSubmit = async (event = null) => {
-    if (event) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    event.stopPropagation();
     
-    console.log('🔵 handleSubmit appelé !'); // Debug
+    console.log('🔵 handleSubmit appelé (Universal Payment) !');
     
     if (!stripe || !elements) {
       console.log('❌ Stripe ou Elements non disponible');
       setError('Stripe n\'est pas encore chargé. Veuillez patienter.');
-      return;
+      return false;
     }
 
     setIsProcessing(true);
@@ -60,30 +55,27 @@ const StripePaymentForm = ({
         throw new Error(responseData.error || 'Erreur lors de la création du paiement');
       }
 
-      const { client_secret, payment_intent_id } = responseData;
+      const { client_secret } = responseData;
 
       if (!client_secret) {
         throw new Error('Erreur lors de la création du paiement');
       }
 
-      // 2. Confirmer le paiement avec Stripe
-      const cardElement = elements.getElement(CardNumberElement);
-      
+      // 2. Confirmer le paiement avec Stripe (CB, PayPal, Apple Pay, etc.)
       console.log('🔵 Confirmation du paiement avec client_secret:', client_secret);
-      const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(
-        client_secret,
-        {
-          payment_method: {
-            card: cardElement,
-          }
-        }
-      );
+      const { error: stripeError, paymentIntent } = await stripe.confirmPayment({
+        elements,
+        confirmParams: {
+          return_url: window.location.href, // Retour après PayPal
+        },
+        redirect: 'if_required' // Évite la redirection si ce n'est pas nécessaire
+      });
 
       if (stripeError) {
         console.log('❌ Erreur Stripe:', stripeError);
         setError(stripeError.message);
         onPaymentError?.(stripeError);
-      } else if (paymentIntent.status === 'succeeded') {
+      } else if (paymentIntent && paymentIntent.status === 'succeeded') {
         // 3. Succès !
         console.log('✅ Paiement réussi:', paymentIntent);
         onPaymentSuccess?.({
@@ -92,8 +84,8 @@ const StripePaymentForm = ({
           status: paymentIntent.status
         });
       } else {
-        console.log('⚠️ Statut de paiement inattendu:', paymentIntent.status);
-        setError(`Statut de paiement inattendu: ${paymentIntent.status}`);
+        console.log('⚠️ Statut de paiement inattendu:', paymentIntent?.status);
+        setError(`Statut de paiement inattendu: ${paymentIntent?.status || 'unknown'}`);
       }
     } catch (err) {
       console.log('❌ Erreur générale:', err);
@@ -102,67 +94,24 @@ const StripePaymentForm = ({
     } finally {
       setIsProcessing(false);
     }
-  };
-
-  const cardElementOptions = {
-    style: {
-      base: {
-        fontSize: '16px',
-        color: '#424770',
-        '::placeholder': {
-          color: '#aab7c4',
-        },
-      },
-      invalid: {
-        color: '#9e2146',
-      },
-    },
+    
+    return false;
   };
 
   return (
     <div style={{ maxWidth: 400, margin: '0 auto' }}>
       <div style={{ marginBottom: 20 }}>
-        <label style={{ display: 'block', marginBottom: 8, fontWeight: 600 }}>
-          Numéro de carte
-        </label>
-        <div style={{ 
-          padding: 12, 
-          border: '1px solid #E5E7EB', 
-          borderRadius: 8,
-          backgroundColor: '#fff'
-        }}>
-          <CardNumberElement options={cardElementOptions} />
-        </div>
-      </div>
-
-      <div style={{ display: 'flex', gap: 16, marginBottom: 20 }}>
-        <div style={{ flex: 1 }}>
-          <label style={{ display: 'block', marginBottom: 8, fontWeight: 600 }}>
-            Expiration
-          </label>
-          <div style={{ 
-            padding: 12, 
-            border: '1px solid #E5E7EB', 
-            borderRadius: 8,
-            backgroundColor: '#fff'
-          }}>
-            <CardExpiryElement options={cardElementOptions} />
-          </div>
-        </div>
-        
-        <div style={{ flex: 1 }}>
-          <label style={{ display: 'block', marginBottom: 8, fontWeight: 600 }}>
-            CVC
-          </label>
-          <div style={{ 
-            padding: 12, 
-            border: '1px solid #E5E7EB', 
-            borderRadius: 8,
-            backgroundColor: '#fff'
-          }}>
-            <CardCvcElement options={cardElementOptions} />
-          </div>
-        </div>
+        <PaymentElement 
+          options={{
+            fields: {
+              billingDetails: 'never'
+            },
+            wallets: {
+              applePay: 'auto',
+              googlePay: 'auto',
+            }
+          }}
+        />
       </div>
 
       {error && (
@@ -202,4 +151,4 @@ const StripePaymentForm = ({
   );
 };
 
-export default StripePaymentForm;
+export default UniversalPaymentForm;
