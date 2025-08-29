@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   useStripe,
   useElements,
@@ -16,6 +16,42 @@ const UniversalPaymentForm = ({
   const elements = useElements();
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState('');
+
+  // Vérifier le retour PayPal au chargement du composant
+  useEffect(() => {
+    if (!stripe) return;
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const paymentIntentClientSecret = urlParams.get('payment_intent_client_secret');
+
+    if (paymentIntentClientSecret) {
+      console.log('🟡 Retour PayPal détecté avec clientSecret:', paymentIntentClientSecret);
+      
+      // Récupérer le PaymentIntent pour vérifier son statut
+      stripe.retrievePaymentIntent(paymentIntentClientSecret).then(({ paymentIntent }) => {
+        console.log('🟡 PaymentIntent récupéré au retour:', paymentIntent);
+        
+        if (paymentIntent.status === 'succeeded') {
+          console.log('✅ Paiement PayPal confirmé au retour !');
+          onPaymentSuccess?.({
+            payment_intent_id: paymentIntent.id,
+            amount: paymentIntent.amount,
+            status: paymentIntent.status
+          });
+          
+          // Nettoyer l'URL
+          window.history.replaceState({}, document.title, window.location.pathname);
+        } else {
+          console.log('⚠️ Statut PaymentIntent au retour:', paymentIntent.status);
+          setError(`Paiement PayPal ${paymentIntent.status}`);
+        }
+      }).catch((err) => {
+        console.log('❌ Erreur récupération PaymentIntent:', err);
+        setError('Erreur lors de la vérification du paiement PayPal');
+        onPaymentError?.(err);
+      });
+    }
+  }, [stripe, onPaymentSuccess, onPaymentError]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
