@@ -94,8 +94,6 @@ const Cart = ({ cart, onRemove, onClear, user }) => {
       setLoading(false);
     }
   };
-
-  const [showPaymentForm, setShowPaymentForm] = useState(false);
   
   const handlePaymentMethodChange = (selectedPayment) => {
     setPayment(selectedPayment);
