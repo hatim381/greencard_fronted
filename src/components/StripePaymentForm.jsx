@@ -20,8 +20,13 @@ const StripePaymentForm = ({
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    event.stopPropagation();
+    
+    console.log('🔵 handleSubmit appelé !'); // Debug
     
     if (!stripe || !elements) {
+      console.log('❌ Stripe ou Elements non disponible');
+      setError('Stripe n\'est pas encore chargé. Veuillez patienter.');
       return;
     }
 
