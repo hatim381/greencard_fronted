@@ -119,7 +119,6 @@ const Cart = ({ cart, onRemove, onClear, onUpdateQuantity, user }) => {
   };
 
   const handleStripeSuccess = async (paymentData) => {
-    console.log('🟢 handleStripeSuccess appelé avec:', paymentData);
     try {
       const orderData = {
         consumer_id: user.id,
@@ -135,8 +134,6 @@ const Cart = ({ cart, onRemove, onClear, onUpdateQuantity, user }) => {
         })),
       };
       
-      console.log('🟢 Envoi de la commande avec:', orderData);
-      
       await orders.create(orderData);
 
       setOrderMsg("Commande passée avec succès !");
@@ -148,16 +145,12 @@ const Cart = ({ cart, onRemove, onClear, onUpdateQuantity, user }) => {
       setEmail("");
       setPhone("");
       setInstructions("");
-      
-      console.log('✅ Commande créée avec succès !');
     } catch (err) {
-      console.log('❌ Erreur lors de la finalisation de la commande:', err);
       setError("Erreur lors de la finalisation de la commande : " + (err.response?.data?.error || err.message));
     }
   };
 
   const handlePayPalSuccess = async (paymentData) => {
-    console.log('🟡 handlePayPalSuccess appelé avec:', paymentData);
     try {
       const orderData = {
         consumer_id: user.id,
@@ -173,8 +166,6 @@ const Cart = ({ cart, onRemove, onClear, onUpdateQuantity, user }) => {
         })),
       };
       
-      console.log('🟡 Envoi de la commande PayPal avec:', orderData);
-      
       await orders.create(orderData);
 
       setOrderMsg("Commande PayPal passée avec succès !");
@@ -187,10 +178,7 @@ const Cart = ({ cart, onRemove, onClear, onUpdateQuantity, user }) => {
       setEmail("");
       setPhone("");
       setInstructions("");
-      
-      console.log('✅ Commande PayPal créée avec succès !');
     } catch (err) {
-      console.log('❌ Erreur lors de la finalisation de la commande PayPal:', err);
       setError("Erreur lors de la finalisation de la commande PayPal : " + (err.response?.data?.error || err.message));
     }
   };
