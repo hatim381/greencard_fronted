@@ -84,11 +84,13 @@ const UniversalPaymentForm = ({
             fields: {
               billingDetails: 'never'
             },
+            wallets: {
+              applePay: 'auto',
+              googlePay: 'auto'
+            },
             layout: {
-              type: 'accordion',
-              defaultCollapsed: false,
-              radios: false,
-              spacedAccordionItems: false
+              type: 'tabs',
+              defaultCollapsed: false
             }
           }}
         />

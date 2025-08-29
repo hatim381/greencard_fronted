@@ -28,9 +28,7 @@ const PayPalPaymentWrapper = ({
           },
           body: JSON.stringify({
             amount: Math.round(totalAmount * 100), // Convertir en centimes
-            currency: 'eur',
-            payment_method_types: ['paypal'], // Spécifier PayPal explicitement
-            preferred_payment_method: 'paypal'
+            currency: 'eur'
           }),
         });
 
@@ -85,12 +83,6 @@ const PayPalPaymentWrapper = ({
     clientSecret,
     appearance: {
       theme: 'stripe',
-    },
-    paymentMethodTypes: ['paypal', 'card'], // Prioriser PayPal
-    defaultValues: {
-      paymentMethod: {
-        type: 'paypal'
-      }
     }
   };
 
