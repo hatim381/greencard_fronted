@@ -2,16 +2,8 @@ import React, { useState, useEffect } from "react";
 import { orders } from "../services/api";
 import StripePaymentForm from "./StripePaymentForm";
 import PayPalPaymentWrapper from "./PayPalPaymentWrapper";
-import useDeviceDetection from "../hooks/useDeviceDetection";
-import CartMobile from "./CartMobile";
 
-const Cart = ({ cart, onRemove, onClear, onUpdateQuantity, user }) => {
-  const { isMobile } = useDeviceDetection();
-  
-  // Si mobile, utiliser CartMobile
-  if (isMobile) {
-    return <CartMobile cart={cart} onRemove={onRemove} onClear={onClear} onUpdateQuantity={onUpdateQuantity} user={user} />;
-  }
+const CartMobile = ({ cart, onRemove, onClear, onUpdateQuantity, user }) => {
   const [showOrderForm, setShowOrderForm] = useState(false);
   const [address, setAddress] = useState(user?.default_address || "");
   const [payment, setPayment] = useState("");
@@ -202,21 +194,21 @@ const Cart = ({ cart, onRemove, onClear, onUpdateQuantity, user }) => {
   return (
     <main
       style={{
-        maxWidth: 800,
-        margin: "2rem auto",
+        margin: "1rem",
         background: "linear-gradient(135deg, #f8fafc 0%, #ffffff 100%)",
-        borderRadius: 24,
+        borderRadius: 20,
         padding: "0",
-        boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.05)",
+        boxShadow: "0 20px 40px -8px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.05)",
         border: "1px solid rgba(229, 231, 235, 0.5)",
         overflow: "hidden",
-        position: "relative"
+        position: "relative",
+        minHeight: "calc(100vh - 2rem)"
       }}
     >
-      {/* Header avec dégradé */}
+      {/* Header mobile avec dégradé */}
       <div style={{
         background: "linear-gradient(135deg, #22C55E 0%, #16A34A 50%, #15803D 100%)",
-        padding: "2rem",
+        padding: "1.5rem 1rem",
         position: "relative",
         overflow: "hidden"
       }}>
@@ -226,14 +218,14 @@ const Cart = ({ cart, onRemove, onClear, onUpdateQuantity, user }) => {
           left: 0,
           right: 0,
           bottom: 0,
-          background: "url('data:image/svg+xml,<svg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"><g fill=\"none\" fill-rule=\"evenodd\"><g fill=\"%23ffffff\" fill-opacity=\"0.05\"><circle cx=\"30\" cy=\"30\" r=\"4\"/></g></g></svg>') repeat",
+          background: "url('data:image/svg+xml,<svg width=\"40\" height=\"40\" viewBox=\"0 0 40 40\" xmlns=\"http://www.w3.org/2000/svg\"><g fill=\"none\" fill-rule=\"evenodd\"><g fill=\"%23ffffff\" fill-opacity=\"0.05\"><circle cx=\"20\" cy=\"20\" r=\"2\"/></g></g></svg>') repeat",
           opacity: 0.3
         }}></div>
         <h2 style={{ 
           textAlign: "center", 
           marginBottom: 0,
           color: "white",
-          fontSize: "2.5rem",
+          fontSize: "1.8rem",
           fontWeight: "700",
           textShadow: "0 2px 4px rgba(0,0,0,0.1)",
           position: "relative",
@@ -244,7 +236,7 @@ const Cart = ({ cart, onRemove, onClear, onUpdateQuantity, user }) => {
         <p style={{
           textAlign: "center",
           color: "rgba(255,255,255,0.9)",
-          fontSize: "1.1rem",
+          fontSize: "0.95rem",
           margin: "0.5rem 0 0 0",
           position: "relative",
           zIndex: 1
@@ -253,19 +245,19 @@ const Cart = ({ cart, onRemove, onClear, onUpdateQuantity, user }) => {
         </p>
       </div>
 
-      {/* Contenu principal */}
-      <div style={{ padding: "2rem" }}>
+      {/* Contenu principal mobile */}
+      <div style={{ padding: "1rem" }}>
         {orderMsg && (
           <div style={{ 
             background: "linear-gradient(135deg, #22C55E, #16A34A)",
             color: "white",
             textAlign: "center", 
-            marginBottom: 24,
-            padding: "1rem 2rem",
-            borderRadius: "12px",
+            marginBottom: 16,
+            padding: "0.8rem 1.5rem",
+            borderRadius: "10px",
             fontWeight: "600",
-            fontSize: "1.1rem",
-            boxShadow: "0 10px 25px -5px rgba(34, 197, 94, 0.3)"
+            fontSize: "0.95rem",
+            boxShadow: "0 8px 20px -4px rgba(34, 197, 94, 0.3)"
           }}>
             ✅ {orderMsg}
           </div>
@@ -274,265 +266,251 @@ const Cart = ({ cart, onRemove, onClear, onUpdateQuantity, user }) => {
       {cart.length === 0 ? (
         <div style={{ 
           textAlign: "center", 
-          padding: "3rem 2rem",
+          padding: "2rem 1rem",
           background: "linear-gradient(135deg, #f8fafc, #e2e8f0)",
-          borderRadius: "16px",
+          borderRadius: "12px",
           border: "2px dashed #cbd5e1",
           position: "relative"
         }}>
           <div style={{
-            fontSize: "4rem",
-            marginBottom: "1rem",
+            fontSize: "3rem",
+            marginBottom: "0.8rem",
             opacity: 0.7
           }}>🛍️</div>
           <h3 style={{
             color: "#64748b",
-            fontSize: "1.5rem",
-            marginBottom: "0.5rem",
+            fontSize: "1.2rem",
+            marginBottom: "0.4rem",
             fontWeight: "600"
           }}>Votre panier est vide</h3>
           <p style={{
             color: "#94a3b8",
-            fontSize: "1.1rem",
+            fontSize: "0.95rem",
             margin: 0
           }}>Découvrez nos produits bio et locaux !</p>
         </div>
       ) : (
         <div>
-          {/* Liste des produits avec style premium */}
-          <div style={{ marginBottom: "2rem" }}>
+          {/* Liste des produits mobile avec style premium */}
+          <div style={{ marginBottom: "1.5rem" }}>
             {cart.map((item, index) => (
               <div
                 key={index}
                 style={{
-                  display: "flex",
-                  alignItems: "center",
-                  padding: "1.5rem",
-                  marginBottom: "1rem",
+                  padding: "1rem",
+                  marginBottom: "0.8rem",
                   background: "linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)",
-                  borderRadius: "16px",
+                  borderRadius: "12px",
                   border: "1px solid rgba(229, 231, 235, 0.6)",
-                  boxShadow: "0 4px 16px -2px rgba(0, 0, 0, 0.05)",
+                  boxShadow: "0 3px 12px -1px rgba(0, 0, 0, 0.05)",
                   transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                   position: "relative",
                   overflow: "hidden"
                 }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = "translateY(-2px)";
-                  e.currentTarget.style.boxShadow = "0 8px 32px -4px rgba(0, 0, 0, 0.1)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = "translateY(0)";
-                  e.currentTarget.style.boxShadow = "0 4px 16px -2px rgba(0, 0, 0, 0.05)";
-                }}
               >
-                {/* Badge de quantité */}
+                {/* Badge de quantité mobile */}
                 <div style={{
                   position: "absolute",
-                  top: "12px",
-                  right: "12px",
+                  top: "8px",
+                  right: "8px",
                   background: "linear-gradient(135deg, #22C55E, #16A34A)",
                   color: "white",
-                  borderRadius: "20px",
-                  padding: "4px 12px",
-                  fontSize: "0.8rem",
+                  borderRadius: "15px",
+                  padding: "3px 8px",
+                  fontSize: "0.7rem",
                   fontWeight: "600",
-                  minWidth: "24px",
+                  minWidth: "20px",
                   textAlign: "center"
                 }}>
                   {item.quantity}
                 </div>
 
-                {/* Image du produit */}
+                {/* Layout mobile : image et infos côte à côte */}
                 <div style={{
-                  width: "80px",
-                  height: "80px",
-                  borderRadius: "12px",
-                  overflow: "hidden",
-                  marginRight: "1.5rem",
-                  flexShrink: 0,
-                  background: "linear-gradient(135deg, #f1f5f9, #e2e8f0)",
                   display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center"
+                  alignItems: "flex-start",
+                  gap: "0.8rem",
+                  marginBottom: "0.8rem"
                 }}>
-                  {item.image ? (
-                    <img
-                      src={item.image}
-                      alt={item.name}
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover"
-                      }}
-                    />
-                  ) : (
-                    <span style={{ fontSize: "2rem", opacity: 0.5 }}>📦</span>
-                  )}
-                </div>
-
-                {/* Informations du produit */}
-                <div style={{ flex: 1, paddingRight: "1rem" }}>
-                  <h4 style={{
-                    margin: "0 0 0.5rem 0",
-                    fontSize: "1.2rem",
-                    fontWeight: "600",
-                    color: "#1e293b",
-                    lineHeight: "1.3"
-                  }}>
-                    {item.name}
-                  </h4>
+                  {/* Image du produit mobile */}
                   <div style={{
+                    width: "60px",
+                    height: "60px",
+                    borderRadius: "8px",
+                    overflow: "hidden",
+                    flexShrink: 0,
+                    background: "linear-gradient(135deg, #f1f5f9, #e2e8f0)",
                     display: "flex",
                     alignItems: "center",
-                    gap: "1rem",
-                    marginBottom: "0.5rem"
+                    justifyContent: "center"
                   }}>
-                    <span style={{
+                    {item.image ? (
+                      <img
+                        src={item.image}
+                        alt={item.name}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover"
+                        }}
+                      />
+                    ) : (
+                      <span style={{ fontSize: "1.5rem", opacity: 0.5 }}>📦</span>
+                    )}
+                  </div>
+
+                  {/* Informations du produit mobile */}
+                  <div style={{ flex: 1, paddingRight: "1.5rem" }}>
+                    <h4 style={{
+                      margin: "0 0 0.3rem 0",
+                      fontSize: "1rem",
+                      fontWeight: "600",
+                      color: "#1e293b",
+                      lineHeight: "1.2"
+                    }}>
+                      {item.name}
+                    </h4>
+                    <div style={{
                       background: "linear-gradient(135deg, #f0fdf4, #dcfce7)",
                       color: "#166534",
-                      padding: "4px 10px",
-                      borderRadius: "8px",
-                      fontSize: "0.9rem",
+                      padding: "2px 6px",
+                      borderRadius: "6px",
+                      fontSize: "0.8rem",
                       fontWeight: "500",
-                      border: "1px solid #bbf7d0"
+                      border: "1px solid #bbf7d0",
+                      display: "inline-block",
+                      marginBottom: "0.3rem"
                     }}>
                       {typeof item.price === "string" && item.price.includes("€")
                         ? item.price
                         : `${item.price}€`} / {item.unit || 'unité'}
-                    </span>
+                    </div>
                     {item.producer && (
-                      <span style={{
+                      <div style={{
                         color: "#64748b",
-                        fontSize: "0.9rem"
+                        fontSize: "0.75rem",
+                        marginBottom: "0.3rem"
                       }}>
                         Producteur: {item.producer}
-                      </span>
+                      </div>
                     )}
                   </div>
+                </div>
+
+                {/* Section total et contrôles mobile */}
+                <div style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  paddingTop: "0.5rem",
+                  borderTop: "1px solid rgba(229, 231, 235, 0.3)"
+                }}>
+                  {/* Total mobile */}
                   <div style={{
                     background: "linear-gradient(135deg, #fef3c7, #fde047)",
                     color: "#92400e",
-                    padding: "6px 12px",
-                    borderRadius: "8px",
-                    display: "inline-block",
-                    fontSize: "1rem",
+                    padding: "4px 8px",
+                    borderRadius: "6px",
+                    fontSize: "0.85rem",
                     fontWeight: "700",
                     border: "1px solid #fbbf24"
                   }}>
-                    Total: {(
+                    {(
                       (typeof item.price === "string" ? parseFloat(item.price.replace("€", "")) : item.price) * 
                       item.quantity
                     ).toFixed(2)}€
                   </div>
-                </div>
 
-                {/* Contrôles de quantité */}
-                <div style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                  background: "rgba(248, 250, 252, 0.8)",
-                  padding: "8px",
-                  borderRadius: "12px",
-                  border: "1px solid rgba(229, 231, 235, 0.6)"
-                }}>
-                  <button
-                    onClick={() => updateCartItem(index, item.quantity - 1)}
-                    style={{
-                      background: "linear-gradient(135deg, #ef4444, #dc2626)",
-                      color: "white",
-                      border: "none",
-                      borderRadius: "8px",
-                      width: "32px",
-                      height: "32px",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      cursor: "pointer",
-                      fontSize: "1.2rem",
-                      fontWeight: "bold",
-                      transition: "all 0.2s ease",
-                      boxShadow: "0 2px 8px -2px rgba(239, 68, 68, 0.3)"
-                    }}
-                    onMouseEnter={(e) => {
-                      e.target.style.transform = "scale(1.1)";
-                      e.target.style.boxShadow = "0 4px 16px -2px rgba(239, 68, 68, 0.4)";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.target.style.transform = "scale(1)";
-                      e.target.style.boxShadow = "0 2px 8px -2px rgba(239, 68, 68, 0.3)";
-                    }}
-                  >
-                    −
-                  </button>
-                  <span style={{
-                    minWidth: "40px",
-                    textAlign: "center",
-                    fontSize: "1.1rem",
-                    fontWeight: "600",
-                    color: "#1e293b"
+                  {/* Contrôles de quantité mobile */}
+                  <div style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "6px",
+                    background: "rgba(248, 250, 252, 0.8)",
+                    padding: "4px",
+                    borderRadius: "8px",
+                    border: "1px solid rgba(229, 231, 235, 0.6)"
                   }}>
-                    {item.quantity}
-                  </span>
-                  <button
-                    onClick={() => updateCartItem(index, item.quantity + 1)}
-                    style={{
-                      background: "linear-gradient(135deg, #22C55E, #16A34A)",
-                      color: "white",
-                      border: "none",
-                      borderRadius: "8px",
-                      width: "32px",
-                      height: "32px",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      cursor: "pointer",
-                      fontSize: "1.2rem",
-                      fontWeight: "bold",
-                      transition: "all 0.2s ease",
-                      boxShadow: "0 2px 8px -2px rgba(34, 197, 94, 0.3)"
-                    }}
-                    onMouseEnter={(e) => {
-                      e.target.style.transform = "scale(1.1)";
-                      e.target.style.boxShadow = "0 4px 16px -2px rgba(34, 197, 94, 0.4)";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.target.style.transform = "scale(1)";
-                      e.target.style.boxShadow = "0 2px 8px -2px rgba(34, 197, 94, 0.3)";
-                    }}
-                  >
-                    +
-                  </button>
+                    <button
+                      onClick={() => updateCartItem(index, item.quantity - 1)}
+                      style={{
+                        background: "linear-gradient(135deg, #ef4444, #dc2626)",
+                        color: "white",
+                        border: "none",
+                        borderRadius: "6px",
+                        width: "28px",
+                        height: "28px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        cursor: "pointer",
+                        fontSize: "1rem",
+                        fontWeight: "bold",
+                        transition: "all 0.2s ease",
+                        boxShadow: "0 2px 6px -1px rgba(239, 68, 68, 0.3)"
+                      }}
+                    >
+                      −
+                    </button>
+                    <span style={{
+                      minWidth: "32px",
+                      textAlign: "center",
+                      fontSize: "0.95rem",
+                      fontWeight: "600",
+                      color: "#1e293b"
+                    }}>
+                      {item.quantity}
+                    </span>
+                    <button
+                      onClick={() => updateCartItem(index, item.quantity + 1)}
+                      style={{
+                        background: "linear-gradient(135deg, #22C55E, #16A34A)",
+                        color: "white",
+                        border: "none",
+                        borderRadius: "6px",
+                        width: "28px",
+                        height: "28px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        cursor: "pointer",
+                        fontSize: "1rem",
+                        fontWeight: "bold",
+                        transition: "all 0.2s ease",
+                        boxShadow: "0 2px 6px -1px rgba(34, 197, 94, 0.3)"
+                      }}
+                    >
+                      +
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
           </div>
 
-          {/* Section Total avec style premium */}
+          {/* Section Total mobile avec style premium */}
           <div style={{
             background: "linear-gradient(135deg, #f8fafc 0%, #ffffff 100%)",
-            borderRadius: "16px",
-            padding: "2rem",
-            marginBottom: "2rem",
+            borderRadius: "12px",
+            padding: "1.5rem",
+            marginBottom: "1.5rem",
             border: "1px solid rgba(229, 231, 235, 0.6)",
-            boxShadow: "0 4px 16px -2px rgba(0, 0, 0, 0.05)"
+            boxShadow: "0 3px 12px -1px rgba(0, 0, 0, 0.05)"
           }}>
             <div style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginBottom: "1.5rem"
+              textAlign: "center",
+              marginBottom: "1.2rem"
             }}>
-              <span style={{
-                fontSize: "1.5rem",
+              <div style={{
+                fontSize: "1.1rem",
                 fontWeight: "600",
-                color: "#1e293b"
+                color: "#1e293b",
+                marginBottom: "0.5rem"
               }}>
                 Total de la commande
-              </span>
-              <span style={{
-                fontSize: "2rem",
+              </div>
+              <div style={{
+                fontSize: "1.8rem",
                 fontWeight: "800",
                 background: "linear-gradient(135deg, #22C55E, #16A34A)",
                 backgroundClip: "text",
@@ -552,76 +530,53 @@ const Cart = ({ cart, onRemove, onClear, onUpdateQuantity, user }) => {
                   }, 0)
                   .toFixed(2)}{" "}
                 €
-              </span>
+              </div>
             </div>
 
-            {/* Boutons d'action avec style premium */}
+            {/* Boutons d'action mobile */}
             <div style={{ 
               display: "flex", 
-              justifyContent: "space-between", 
-              gap: "1rem",
-              flexWrap: "wrap"
+              flexDirection: "column",
+              gap: "0.8rem"
             }}>
-              <button 
-                onClick={onClear}
-                style={{
-                  background: "linear-gradient(135deg, #f1f5f9, #e2e8f0)",
-                  color: "#64748b",
-                  border: "2px solid #e2e8f0",
-                  borderRadius: "12px",
-                  padding: "0.8rem 2rem",
-                  fontSize: "1rem",
-                  fontWeight: "600",
-                  cursor: "pointer",
-                  transition: "all 0.3s ease",
-                  boxShadow: "0 2px 8px -2px rgba(0, 0, 0, 0.1)",
-                  flex: "1",
-                  minWidth: "140px"
-                }}
-                onMouseEnter={(e) => {
-                  e.target.style.background = "linear-gradient(135deg, #ef4444, #dc2626)";
-                  e.target.style.color = "white";
-                  e.target.style.transform = "translateY(-2px)";
-                  e.target.style.boxShadow = "0 8px 24px -4px rgba(239, 68, 68, 0.3)";
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.background = "linear-gradient(135deg, #f1f5f9, #e2e8f0)";
-                  e.target.style.color = "#64748b";
-                  e.target.style.transform = "translateY(0)";
-                  e.target.style.boxShadow = "0 2px 8px -2px rgba(0, 0, 0, 0.1)";
-                }}
-              >
-                🗑️ Vider le panier
-              </button>
-              
               <button
                 onClick={() => setShowOrderForm(true)}
                 style={{
                   background: "linear-gradient(135deg, #22C55E 0%, #16A34A 50%, #15803D 100%)",
                   color: "white",
                   border: "none",
-                  borderRadius: "12px",
-                  padding: "0.8rem 2rem",
+                  borderRadius: "10px",
+                  padding: "0.9rem 2rem",
                   fontSize: "1rem",
                   fontWeight: "700",
                   cursor: "pointer",
                   transition: "all 0.3s ease",
-                  boxShadow: "0 8px 24px -4px rgba(34, 197, 94, 0.3)",
-                  flex: "2",
-                  minWidth: "200px",
+                  boxShadow: "0 6px 20px -3px rgba(34, 197, 94, 0.3)",
+                  width: "100%",
                   position: "relative",
                   overflow: "hidden"
                 }}
-                onMouseEnter={(e) => {
-                  e.target.style.transform = "translateY(-2px) scale(1.02)";
-                  e.target.style.boxShadow = "0 12px 32px -4px rgba(34, 197, 94, 0.4)";
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.transform = "translateY(0) scale(1)";
-                  e.target.style.boxShadow = "0 8px 24px -4px rgba(34, 197, 94, 0.3)";
-                }}
               >
                 ✨ Finaliser ma commande
+              </button>
+              
+              <button 
+                onClick={onClear}
+                style={{
+                  background: "linear-gradient(135deg, #f1f5f9, #e2e8f0)",
+                  color: "#64748b",
+                  border: "2px solid #e2e8f0",
+                  borderRadius: "10px",
+                  padding: "0.7rem 2rem",
+                  fontSize: "0.9rem",
+                  fontWeight: "600",
+                  cursor: "pointer",
+                  transition: "all 0.3s ease",
+                  boxShadow: "0 2px 8px -2px rgba(0, 0, 0, 0.1)",
+                  width: "100%"
+                }}
+              >
+                🗑️ Vider le panier
               </button>
             </div>
           </div>
@@ -629,49 +584,49 @@ const Cart = ({ cart, onRemove, onClear, onUpdateQuantity, user }) => {
           {showOrderForm && (
             <div style={{
               background: "linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)",
-              borderRadius: "24px",
-              padding: "3rem",
-              marginTop: "2rem",
+              borderRadius: "16px",
+              padding: "1.5rem",
+              marginTop: "1rem",
               border: "1px solid rgba(229, 231, 235, 0.6)",
-              boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.1)",
+              boxShadow: "0 20px 40px -8px rgba(0, 0, 0, 0.1)",
               position: "relative",
               overflow: "hidden"
             }}>
-              {/* Header du formulaire */}
+              {/* Header du formulaire mobile */}
               <div style={{
                 textAlign: "center",
-                marginBottom: "3rem",
+                marginBottom: "2rem",
                 position: "relative"
               }}>
                 <div style={{
                   position: "absolute",
-                  top: "-1rem",
+                  top: "-0.8rem",
                   left: "50%",
                   transform: "translateX(-50%)",
                   background: "linear-gradient(135deg, #22C55E, #16A34A)",
                   borderRadius: "50%",
-                  width: "60px",
-                  height: "60px",
+                  width: "50px",
+                  height: "50px",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  fontSize: "1.5rem",
-                  boxShadow: "0 8px 24px -4px rgba(34, 197, 94, 0.3)"
+                  fontSize: "1.2rem",
+                  boxShadow: "0 6px 20px -3px rgba(34, 197, 94, 0.3)"
                 }}>
-                  �
+                  📄
                 </div>
                 <h3 style={{
                   color: "#1e293b",
-                  fontSize: "2rem",
+                  fontSize: "1.5rem",
                   fontWeight: "700",
-                  marginTop: "1.5rem",
-                  marginBottom: "0.5rem"
+                  marginTop: "1.2rem",
+                  marginBottom: "0.4rem"
                 }}>
                   Informations de livraison
                 </h3>
                 <p style={{
                   color: "#64748b",
-                  fontSize: "1.1rem",
+                  fontSize: "0.9rem",
                   margin: 0
                 }}>
                   Complétez vos informations pour finaliser votre commande
@@ -679,21 +634,21 @@ const Cart = ({ cart, onRemove, onClear, onUpdateQuantity, user }) => {
               </div>
 
               <form onSubmit={handleOrder}>
-                {/* Grille du formulaire */}
+                {/* Formulaire mobile */}
                 <div style={{
-                  display: "grid",
-                  gap: "2rem",
-                  gridTemplateColumns: "1fr",
-                  marginBottom: "2rem"
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "1.2rem",
+                  marginBottom: "1.5rem"
                 }}>
-                  {/* Adresse */}
-                  <div style={{ position: "relative" }}>
+                  {/* Adresse mobile */}
+                  <div>
                     <label style={{
                       display: "block",
-                      fontSize: "1rem",
+                      fontSize: "0.9rem",
                       fontWeight: "600",
                       color: "#374151",
-                      marginBottom: "0.5rem"
+                      marginBottom: "0.4rem"
                     }}>
                       🏠 Adresse de livraison *
                     </label>
@@ -704,115 +659,86 @@ const Cart = ({ cart, onRemove, onClear, onUpdateQuantity, user }) => {
                       placeholder="123 Rue de la Paix, 75001 Paris"
                       style={{
                         width: "100%",
-                        padding: "1rem 1.5rem",
+                        padding: "0.8rem 1rem",
                         border: "2px solid #e5e7eb",
-                        borderRadius: "12px",
-                        fontSize: "1rem",
+                        borderRadius: "8px",
+                        fontSize: "0.9rem",
                         background: "linear-gradient(135deg, #ffffff, #f9fafb)",
                         transition: "all 0.3s ease",
                         outline: "none",
-                        boxShadow: "0 2px 8px -2px rgba(0, 0, 0, 0.05)"
-                      }}
-                      onFocus={(e) => {
-                        e.target.style.borderColor = "#22C55E";
-                        e.target.style.boxShadow = "0 0 0 3px rgba(34, 197, 94, 0.1)";
-                      }}
-                      onBlur={(e) => {
-                        e.target.style.borderColor = "#e5e7eb";
-                        e.target.style.boxShadow = "0 2px 8px -2px rgba(0, 0, 0, 0.05)";
+                        boxShadow: "0 2px 6px -1px rgba(0, 0, 0, 0.05)"
                       }}
                     />
                   </div>
 
-                  {/* Email et Téléphone sur 2 colonnes */}
-                  <div style={{
-                    display: "grid",
-                    gridTemplateColumns: "1fr 1fr",
-                    gap: "1.5rem"
-                  }}>
-                    <div>
-                      <label style={{
-                        display: "block",
-                        fontSize: "1rem",
-                        fontWeight: "600",
-                        color: "#374151",
-                        marginBottom: "0.5rem"
-                      }}>
-                        📧 Email *
-                      </label>
-                      <input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="votre@email.com"
-                        style={{
-                          width: "100%",
-                          padding: "1rem 1.5rem",
-                          border: "2px solid #e5e7eb",
-                          borderRadius: "12px",
-                          fontSize: "1rem",
-                          background: "linear-gradient(135deg, #ffffff, #f9fafb)",
-                          transition: "all 0.3s ease",
-                          outline: "none",
-                          boxShadow: "0 2px 8px -2px rgba(0, 0, 0, 0.05)"
-                        }}
-                        onFocus={(e) => {
-                          e.target.style.borderColor = "#22C55E";
-                          e.target.style.boxShadow = "0 0 0 3px rgba(34, 197, 94, 0.1)";
-                        }}
-                        onBlur={(e) => {
-                          e.target.style.borderColor = "#e5e7eb";
-                          e.target.style.boxShadow = "0 2px 8px -2px rgba(0, 0, 0, 0.05)";
-                        }}
-                      />
-                    </div>
-
-                    <div>
-                      <label style={{
-                        display: "block",
-                        fontSize: "1rem",
-                        fontWeight: "600",
-                        color: "#374151",
-                        marginBottom: "0.5rem"
-                      }}>
-                        📱 Téléphone *
-                      </label>
-                      <input
-                        type="tel"
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                        placeholder="06 12 34 56 78"
-                        style={{
-                          width: "100%",
-                          padding: "1rem 1.5rem",
-                          border: "2px solid #e5e7eb",
-                          borderRadius: "12px",
-                          fontSize: "1rem",
-                          background: "linear-gradient(135deg, #ffffff, #f9fafb)",
-                          transition: "all 0.3s ease",
-                          outline: "none",
-                          boxShadow: "0 2px 8px -2px rgba(0, 0, 0, 0.05)"
-                        }}
-                        onFocus={(e) => {
-                          e.target.style.borderColor = "#22C55E";
-                          e.target.style.boxShadow = "0 0 0 3px rgba(34, 197, 94, 0.1)";
-                        }}
-                        onBlur={(e) => {
-                          e.target.style.borderColor = "#e5e7eb";
-                          e.target.style.boxShadow = "0 2px 8px -2px rgba(0, 0, 0, 0.05)";
-                        }}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Instructions */}
+                  {/* Email mobile */}
                   <div>
                     <label style={{
                       display: "block",
-                      fontSize: "1rem",
+                      fontSize: "0.9rem",
                       fontWeight: "600",
                       color: "#374151",
-                      marginBottom: "0.5rem"
+                      marginBottom: "0.4rem"
+                    }}>
+                      📧 Email *
+                    </label>
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="votre@email.com"
+                      style={{
+                        width: "100%",
+                        padding: "0.8rem 1rem",
+                        border: "2px solid #e5e7eb",
+                        borderRadius: "8px",
+                        fontSize: "0.9rem",
+                        background: "linear-gradient(135deg, #ffffff, #f9fafb)",
+                        transition: "all 0.3s ease",
+                        outline: "none",
+                        boxShadow: "0 2px 6px -1px rgba(0, 0, 0, 0.05)"
+                      }}
+                    />
+                  </div>
+
+                  {/* Téléphone mobile */}
+                  <div>
+                    <label style={{
+                      display: "block",
+                      fontSize: "0.9rem",
+                      fontWeight: "600",
+                      color: "#374151",
+                      marginBottom: "0.4rem"
+                    }}>
+                      📱 Téléphone *
+                    </label>
+                    <input
+                      type="tel"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      placeholder="06 12 34 56 78"
+                      style={{
+                        width: "100%",
+                        padding: "0.8rem 1rem",
+                        border: "2px solid #e5e7eb",
+                        borderRadius: "8px",
+                        fontSize: "0.9rem",
+                        background: "linear-gradient(135deg, #ffffff, #f9fafb)",
+                        transition: "all 0.3s ease",
+                        outline: "none",
+                        boxShadow: "0 2px 6px -1px rgba(0, 0, 0, 0.05)"
+                      }}
+                    />
+                  </div>
+
+                  {/* Instructions mobile */}
+                  <div>
+                    <label style={{
+                      display: "block",
+                      fontSize: "0.9rem",
+                      fontWeight: "600",
+                      color: "#374151",
+                      marginBottom: "0.4rem"
                     }}>
                       💬 Instructions spéciales (optionnel)
                     </label>
@@ -823,67 +749,59 @@ const Cart = ({ cart, onRemove, onClear, onUpdateQuantity, user }) => {
                       rows="3"
                       style={{
                         width: "100%",
-                        padding: "1rem 1.5rem",
+                        padding: "0.8rem 1rem",
                         border: "2px solid #e5e7eb",
-                        borderRadius: "12px",
-                        fontSize: "1rem",
+                        borderRadius: "8px",
+                        fontSize: "0.9rem",
                         background: "linear-gradient(135deg, #ffffff, #f9fafb)",
                         transition: "all 0.3s ease",
                         outline: "none",
-                        boxShadow: "0 2px 8px -2px rgba(0, 0, 0, 0.05)",
+                        boxShadow: "0 2px 6px -1px rgba(0, 0, 0, 0.05)",
                         resize: "vertical",
                         fontFamily: "inherit"
-                      }}
-                      onFocus={(e) => {
-                        e.target.style.borderColor = "#22C55E";
-                        e.target.style.boxShadow = "0 0 0 3px rgba(34, 197, 94, 0.1)";
-                      }}
-                      onBlur={(e) => {
-                        e.target.style.borderColor = "#e5e7eb";
-                        e.target.style.boxShadow = "0 2px 8px -2px rgba(0, 0, 0, 0.05)";
                       }}
                     />
                   </div>
                 </div>
 
-                {/* Section Méthode de paiement */}
+                {/* Section Méthode de paiement mobile */}
                 <div style={{
                   background: "linear-gradient(135deg, #f0fdf4, #dcfce7)",
-                  borderRadius: "16px",
-                  padding: "2rem",
+                  borderRadius: "12px",
+                  padding: "1.5rem",
                   border: "2px solid #bbf7d0",
-                  marginBottom: "2rem"
+                  marginBottom: "1.5rem"
                 }}>
                   <h4 style={{
                     color: "#166534",
-                    fontSize: "1.3rem",
+                    fontSize: "1.1rem",
                     fontWeight: "700",
-                    marginBottom: "1.5rem",
+                    marginBottom: "1rem",
                     display: "flex",
                     alignItems: "center",
-                    gap: "0.5rem"
+                    gap: "0.4rem"
                   }}>
                     💳 Méthode de paiement
                   </h4>
 
                   <div style={{
-                    display: "grid",
-                    gridTemplateColumns: "1fr 1fr 1fr",
-                    gap: "1rem",
-                    marginBottom: "1.5rem"
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "0.8rem",
+                    marginBottom: "1rem"
                   }}>
-                    {/* Option Carte Bancaire */}
+                    {/* Option Carte Bancaire mobile */}
                     <label style={{
                       display: "flex",
                       alignItems: "center",
-                      padding: "1rem",
+                      padding: "0.8rem",
                       background: payment === "cb" ? "linear-gradient(135deg, #22C55E, #16A34A)" : "white",
                       color: payment === "cb" ? "white" : "#374151",
-                      borderRadius: "12px",
+                      borderRadius: "8px",
                       border: `2px solid ${payment === "cb" ? "#22C55E" : "#e5e7eb"}`,
                       cursor: "pointer",
                       transition: "all 0.3s ease",
-                      boxShadow: payment === "cb" ? "0 8px 24px -4px rgba(34, 197, 94, 0.3)" : "0 2px 8px -2px rgba(0, 0, 0, 0.05)"
+                      boxShadow: payment === "cb" ? "0 6px 20px -3px rgba(34, 197, 94, 0.3)" : "0 2px 6px -1px rgba(0, 0, 0, 0.05)"
                     }}>
                       <input
                         type="radio"
@@ -891,26 +809,26 @@ const Cart = ({ cart, onRemove, onClear, onUpdateQuantity, user }) => {
                         value="cb"
                         checked={payment === "cb"}
                         onChange={() => handlePaymentMethodChange("cb")}
-                        style={{ marginRight: "0.75rem", transform: "scale(1.2)" }}
+                        style={{ marginRight: "0.6rem", transform: "scale(1.1)" }}
                       />
                       <div>
-                        <div style={{ fontWeight: "600", fontSize: "1rem" }}>💳 Carte Bancaire</div>
-                        <div style={{ fontSize: "0.85rem", opacity: 0.8 }}>Visa, MasterCard, American Express</div>
+                        <div style={{ fontWeight: "600", fontSize: "0.9rem" }}>💳 Carte Bancaire</div>
+                        <div style={{ fontSize: "0.75rem", opacity: 0.8 }}>Visa, MasterCard, American Express</div>
                       </div>
                     </label>
 
-                    {/* Option PayPal */}
+                    {/* Option PayPal mobile */}
                     <label style={{
                       display: "flex",
                       alignItems: "center",
-                      padding: "1rem",
+                      padding: "0.8rem",
                       background: payment === "paypal" ? "linear-gradient(135deg, #0070f3, #0051cc)" : "white",
                       color: payment === "paypal" ? "white" : "#374151",
-                      borderRadius: "12px",
+                      borderRadius: "8px",
                       border: `2px solid ${payment === "paypal" ? "#0070f3" : "#e5e7eb"}`,
                       cursor: "pointer",
                       transition: "all 0.3s ease",
-                      boxShadow: payment === "paypal" ? "0 8px 24px -4px rgba(0, 112, 243, 0.3)" : "0 2px 8px -2px rgba(0, 0, 0, 0.05)"
+                      boxShadow: payment === "paypal" ? "0 6px 20px -3px rgba(0, 112, 243, 0.3)" : "0 2px 6px -1px rgba(0, 0, 0, 0.05)"
                     }}>
                       <input
                         type="radio"
@@ -918,26 +836,26 @@ const Cart = ({ cart, onRemove, onClear, onUpdateQuantity, user }) => {
                         value="paypal"
                         checked={payment === "paypal"}
                         onChange={() => handlePaymentMethodChange("paypal")}
-                        style={{ marginRight: "0.75rem", transform: "scale(1.2)" }}
+                        style={{ marginRight: "0.6rem", transform: "scale(1.1)" }}
                       />
                       <div>
-                        <div style={{ fontWeight: "600", fontSize: "1rem" }}>🟦 PayPal</div>
-                        <div style={{ fontSize: "0.85rem", opacity: 0.8 }}>Paiement sécurisé avec PayPal</div>
+                        <div style={{ fontWeight: "600", fontSize: "0.9rem" }}>🟦 PayPal</div>
+                        <div style={{ fontSize: "0.75rem", opacity: 0.8 }}>Paiement sécurisé avec PayPal</div>
                       </div>
                     </label>
 
-                    {/* Option Espèces à la livraison */}
+                    {/* Option Espèces mobile */}
                     <label style={{
                       display: "flex",
                       alignItems: "center",
-                      padding: "1rem",
+                      padding: "0.8rem",
                       background: payment === "especes" ? "linear-gradient(135deg, #f59e0b, #d97706)" : "white",
                       color: payment === "especes" ? "white" : "#374151",
-                      borderRadius: "12px",
+                      borderRadius: "8px",
                       border: `2px solid ${payment === "especes" ? "#f59e0b" : "#e5e7eb"}`,
                       cursor: "pointer",
                       transition: "all 0.3s ease",
-                      boxShadow: payment === "especes" ? "0 8px 24px -4px rgba(245, 158, 11, 0.3)" : "0 2px 8px -2px rgba(0, 0, 0, 0.05)"
+                      boxShadow: payment === "especes" ? "0 6px 20px -3px rgba(245, 158, 11, 0.3)" : "0 2px 6px -1px rgba(0, 0, 0, 0.05)"
                     }}>
                       <input
                         type="radio"
@@ -945,66 +863,39 @@ const Cart = ({ cart, onRemove, onClear, onUpdateQuantity, user }) => {
                         value="especes"
                         checked={payment === "especes"}
                         onChange={() => handlePaymentMethodChange("especes")}
-                        style={{ marginRight: "0.75rem", transform: "scale(1.2)" }}
+                        style={{ marginRight: "0.6rem", transform: "scale(1.1)" }}
                       />
                       <div>
-                        <div style={{ fontWeight: "600", fontSize: "1rem" }}>💰 Espèces</div>
-                        <div style={{ fontSize: "0.85rem", opacity: 0.8 }}>Paiement à la livraison</div>
+                        <div style={{ fontWeight: "600", fontSize: "0.9rem" }}>💰 Espèces</div>
+                        <div style={{ fontSize: "0.75rem", opacity: 0.8 }}>Paiement à la livraison</div>
                       </div>
                     </label>
                   </div>
                 </div>
 
-                {/* Messages d'erreur */}
+                {/* Messages d'erreur mobile */}
                 {error && (
                   <div style={{
                     background: "linear-gradient(135deg, #fef2f2, #fee2e2)",
                     color: "#dc2626",
-                    padding: "1rem 1.5rem",
-                    borderRadius: "12px",
+                    padding: "0.8rem 1rem",
+                    borderRadius: "8px",
                     border: "2px solid #fecaca",
-                    marginBottom: "1.5rem",
-                    fontSize: "1rem",
+                    marginBottom: "1rem",
+                    fontSize: "0.85rem",
                     fontWeight: "500"
                   }}>
                     ⚠️ {error}
                   </div>
                 )}
 
-                {/* Boutons du formulaire */}
+                {/* Boutons du formulaire mobile */}
                 <div style={{
                   display: "flex",
-                  gap: "1rem",
-                  justifyContent: "space-between",
-                  marginTop: "2rem"
+                  flexDirection: "column",
+                  gap: "0.8rem",
+                  marginTop: "1.5rem"
                 }}>
-                  <button
-                    type="button"
-                    onClick={() => setShowOrderForm(false)}
-                    style={{
-                      background: "linear-gradient(135deg, #f1f5f9, #e2e8f0)",
-                      color: "#64748b",
-                      border: "2px solid #e2e8f0",
-                      borderRadius: "12px",
-                      padding: "0.8rem 2rem",
-                      fontSize: "1rem",
-                      fontWeight: "600",
-                      cursor: "pointer",
-                      transition: "all 0.3s ease",
-                      flex: "1"
-                    }}
-                    onMouseEnter={(e) => {
-                      e.target.style.background = "linear-gradient(135deg, #e2e8f0, #cbd5e1)";
-                      e.target.style.transform = "translateY(-2px)";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.target.style.background = "linear-gradient(135deg, #f1f5f9, #e2e8f0)";
-                      e.target.style.transform = "translateY(0)";
-                    }}
-                  >
-                    ← Retour au panier
-                  </button>
-
                   {(!showStripeForm && !showPaymentForm) && (
                     <button
                       type="submit"
@@ -1015,55 +906,62 @@ const Cart = ({ cart, onRemove, onClear, onUpdateQuantity, user }) => {
                           : "linear-gradient(135deg, #22C55E 0%, #16A34A 50%, #15803D 100%)",
                         color: "white",
                         border: "none",
-                        borderRadius: "12px",
-                        padding: "0.8rem 2rem",
+                        borderRadius: "10px",
+                        padding: "0.9rem 2rem",
                         fontSize: "1rem",
                         fontWeight: "700",
                         cursor: loading || !payment ? "not-allowed" : "pointer",
                         transition: "all 0.3s ease",
-                        flex: "2",
+                        width: "100%",
                         opacity: loading || !payment ? 0.6 : 1,
-                        boxShadow: "0 8px 24px -4px rgba(34, 197, 94, 0.3)"
-                      }}
-                      onMouseEnter={(e) => {
-                        if (!loading && payment) {
-                          e.target.style.transform = "translateY(-2px) scale(1.02)";
-                          e.target.style.boxShadow = "0 12px 32px -4px rgba(34, 197, 94, 0.4)";
-                        }
-                      }}
-                      onMouseLeave={(e) => {
-                        if (!loading && payment) {
-                          e.target.style.transform = "translateY(0) scale(1)";
-                          e.target.style.boxShadow = "0 8px 24px -4px rgba(34, 197, 94, 0.3)";
-                        }
+                        boxShadow: "0 6px 20px -3px rgba(34, 197, 94, 0.3)"
                       }}
                     >
                       {loading ? "⏳ Traitement..." : "🚀 Confirmer la commande"}
                     </button>
                   )}
+
+                  <button
+                    type="button"
+                    onClick={() => setShowOrderForm(false)}
+                    style={{
+                      background: "linear-gradient(135deg, #f1f5f9, #e2e8f0)",
+                      color: "#64748b",
+                      border: "2px solid #e2e8f0",
+                      borderRadius: "10px",
+                      padding: "0.7rem 2rem",
+                      fontSize: "0.9rem",
+                      fontWeight: "600",
+                      cursor: "pointer",
+                      transition: "all 0.3s ease",
+                      width: "100%"
+                    }}
+                  >
+                    ← Retour au panier
+                  </button>
                 </div>
               </form>
 
-              {/* Formulaire Stripe pour paiement CB */}
+              {/* Formulaire Stripe mobile */}
               {showStripeForm && (
                 <div style={{ 
-                  marginTop: "2rem",
+                  marginTop: "1.5rem",
                   background: "linear-gradient(135deg, #f0fdf4, #dcfce7)",
-                  borderRadius: "16px",
-                  padding: "2rem",
+                  borderRadius: "12px",
+                  padding: "1.5rem",
                   border: "2px solid #22C55E",
-                  boxShadow: "0 8px 24px -4px rgba(34, 197, 94, 0.2)"
+                  boxShadow: "0 6px 20px -3px rgba(34, 197, 94, 0.2)"
                 }}>
                   <h3 style={{ 
                     color: "#166534",
-                    marginBottom: "1.5rem",
+                    marginBottom: "1rem",
                     textAlign: "center",
-                    fontSize: "1.5rem",
+                    fontSize: "1.2rem",
                     fontWeight: "700",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    gap: "0.5rem"
+                    gap: "0.4rem"
                   }}>
                     💳 Paiement par Carte Bancaire
                   </h3>
@@ -1081,26 +979,26 @@ const Cart = ({ cart, onRemove, onClear, onUpdateQuantity, user }) => {
                 </div>
               )}
 
-              {/* Formulaire PayPal */}
+              {/* Formulaire PayPal mobile */}
               {showPaymentForm && (
                 <div style={{ 
-                  marginTop: "2rem",
+                  marginTop: "1.5rem",
                   background: "linear-gradient(135deg, #eff6ff, #dbeafe)",
-                  borderRadius: "16px",
-                  padding: "2rem",
+                  borderRadius: "12px",
+                  padding: "1.5rem",
                   border: "2px solid #0070f3",
-                  boxShadow: "0 8px 24px -4px rgba(0, 112, 243, 0.2)"
+                  boxShadow: "0 6px 20px -3px rgba(0, 112, 243, 0.2)"
                 }}>
                   <h3 style={{ 
                     color: "#1e40af",
-                    marginBottom: "1.5rem",
+                    marginBottom: "1rem",
                     textAlign: "center",
-                    fontSize: "1.5rem",
+                    fontSize: "1.2rem",
                     fontWeight: "700",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    gap: "0.5rem"
+                    gap: "0.4rem"
                   }}>
                     🟦 Paiement PayPal
                   </h3>
@@ -1123,29 +1021,28 @@ const Cart = ({ cart, onRemove, onClear, onUpdateQuantity, user }) => {
       )}
       </div>
 
-      {/* Footer avec informations de sécurité */}
+      {/* Footer mobile avec informations de sécurité */}
       <div style={{
         background: "linear-gradient(135deg, #f8fafc, #e2e8f0)",
-        padding: "1.5rem",
+        padding: "1rem",
         textAlign: "center",
         borderTop: "1px solid rgba(229, 231, 235, 0.6)"
       }}>
         <div style={{
           display: "flex",
+          flexDirection: "column",
           alignItems: "center",
-          justifyContent: "center",
-          gap: "2rem",
-          flexWrap: "wrap",
-          fontSize: "0.9rem",
+          gap: "0.8rem",
+          fontSize: "0.8rem",
           color: "#64748b"
         }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
             🔒 Paiement sécurisé
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
             🚚 Livraison rapide
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
             🌱 Produits bio
           </div>
         </div>
@@ -1154,4 +1051,4 @@ const Cart = ({ cart, onRemove, onClear, onUpdateQuantity, user }) => {
   );
 };
 
-export default Cart;
+export default CartMobile;
