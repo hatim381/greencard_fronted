@@ -117,7 +117,7 @@ const StripePaymentForm = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ maxWidth: 400, margin: '0 auto' }}>
+    <div style={{ maxWidth: 400, margin: '0 auto' }}>
       <div style={{ marginBottom: 20 }}>
         <label style={{ display: 'block', marginBottom: 8, fontWeight: 600 }}>
           Numéro de carte
@@ -177,7 +177,8 @@ const StripePaymentForm = ({
       )}
 
       <button
-        type="submit"
+        type="button"
+        onClick={handleSubmit}
         disabled={!stripe || isProcessing || loading}
         style={{
           width: '100%',
@@ -194,7 +195,7 @@ const StripePaymentForm = ({
       >
         {isProcessing ? 'Traitement...' : `Payer ${totalAmount.toFixed(2)}€`}
       </button>
-    </form>
+    </div>
   );
 };
 
