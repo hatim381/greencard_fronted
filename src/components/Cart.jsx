@@ -7,11 +7,6 @@ import CartMobile from "./CartMobile";
 
 const Cart = ({ cart, onRemove, onClear, onUpdateQuantity, user }) => {
   const { isMobile } = useDeviceDetection();
-  
-  // Si mobile, utiliser CartMobile
-  if (isMobile) {
-    return <CartMobile cart={cart} onRemove={onRemove} onClear={onClear} onUpdateQuantity={onUpdateQuantity} user={user} />;
-  }
   const [showOrderForm, setShowOrderForm] = useState(false);
   const [address, setAddress] = useState(user?.default_address || "");
   const [payment, setPayment] = useState("");
@@ -24,6 +19,15 @@ const Cart = ({ cart, onRemove, onClear, onUpdateQuantity, user }) => {
   const [showStripeForm, setShowStripeForm] = useState(false);
   const [showPaymentForm, setShowPaymentForm] = useState(false);
 
+  useEffect(() => {
+    setAddress(user?.default_address || "");
+  }, [user]);
+  
+  // Si mobile, utiliser CartMobile
+  if (isMobile) {
+    return <CartMobile cart={cart} onRemove={onRemove} onClear={onClear} onUpdateQuantity={onUpdateQuantity} user={user} />;
+  }
+
   const updateCartItem = (index, newQuantity) => {
     if (newQuantity <= 0) {
       const item = cart[index];
@@ -32,10 +36,6 @@ const Cart = ({ cart, onRemove, onClear, onUpdateQuantity, user }) => {
       onUpdateQuantity(index, newQuantity);
     }
   };
-
-  useEffect(() => {
-    setAddress(user?.default_address || "");
-  }, [user]);
 
   const handleOrder = async (e) => {
     e.preventDefault();
@@ -658,7 +658,7 @@ const Cart = ({ cart, onRemove, onClear, onUpdateQuantity, user }) => {
                   fontSize: "1.5rem",
                   boxShadow: "0 8px 24px -4px rgba(34, 197, 94, 0.3)"
                 }}>
-                  �
+                  📄
                 </div>
                 <h3 style={{
                   color: "#1e293b",
