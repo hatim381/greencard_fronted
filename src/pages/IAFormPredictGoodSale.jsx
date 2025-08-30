@@ -4,7 +4,6 @@ import axios from 'axios';
 const API_URL = process.env.REACT_APP_API_URL || 'https://greencard-backend.onrender.com/api';
 
 const categories = ["Produits laitiers", "Légumes", "Fruits", "Boulangerie"];
-const regions = ["Grand Est", "Nouvelle-Aquitaine", "Bourgogne-Franche-Comté", "Pays de la Loire", "Hauts-de-France", "Auvergne-Rhône-Alpes", "Occitanie", "Provence-Alpes-Côte d'Azur", "Normandie"];
 
 // Mapping des mois
 const mois = [

@@ -5,13 +5,6 @@ const API_URL = process.env.REACT_APP_API_URL || 'https://greencard-backend.onre
 
 const categories = ["Produits laitiers", "Légumes", "Fruits", "Boulangerie"];
 
-import React, { useState } from 'react';
-import axios from 'axios';
-
-const API_URL = process.env.REACT_APP_API_URL || 'https://greencard-backend.onrender.com/api';
-
-const categories = ["Produits laitiers", "Légumes", "Fruits", "Boulangerie"];
-
 // Mapping des mois
 const mois = [
   { value: 1, label: "Janvier" },
