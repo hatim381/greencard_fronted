@@ -19,6 +19,11 @@ const Cart = ({ cart, onRemove, onClear, onUpdateQuantity, user }) => {
   const [showStripeForm, setShowStripeForm] = useState(false);
   const [showPaymentForm, setShowPaymentForm] = useState(false);
   
+  // Hook must be called before any conditional returns
+  useEffect(() => {
+    setAddress(user?.default_address || "");
+  }, [user]);
+  
   // Si mobile, utiliser CartMobile
   if (isMobile) {
     return <CartMobile cart={cart} onRemove={onRemove} onClear={onClear} onUpdateQuantity={onUpdateQuantity} user={user} />;
@@ -32,10 +37,6 @@ const Cart = ({ cart, onRemove, onClear, onUpdateQuantity, user }) => {
       onUpdateQuantity(index, newQuantity);
     }
   };
-
-  useEffect(() => {
-    setAddress(user?.default_address || "");
-  }, [user]);
 
   const handleOrder = async (e) => {
     e.preventDefault();
